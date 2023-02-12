@@ -1,0 +1,22 @@
+services:
+  monolit:
+    build: .
+    ports:
+      - 3000:3000
+    env_file:
+      - .env
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - 15672:15672
+      - 5672:5672
+  postgres:
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=postgres
