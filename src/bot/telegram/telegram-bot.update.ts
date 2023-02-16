@@ -45,8 +45,13 @@ export class TelegramBotUpdate {
     }
   }
 
-  private isUserInSession(ctx) {
-    return !!ctx.session.userId;
+  private async isUserInSession(ctx) {
+    let userId = ctx.session.userId;
+    if (!userId) {
+      userId = await this.getUserId(ctx.update.message.from.id);
+    }
+
+    return !!userId;
   }
 
   private async getUserId(clientId: string) {

@@ -4,6 +4,6 @@ export type Offer = {
   stock: number;
   oldPrice: number;
   newPrice: number;
-  openedAt: Date;
-  closedAt: Date;
+  openedAt: string;
+  closedAt: string;
 };

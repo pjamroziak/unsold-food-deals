@@ -3,10 +3,10 @@ import { InjectBot } from 'nestjs-telegraf';
 import { Context, Telegraf } from 'telegraf';
 import { RabbitRPC, RabbitPayload } from '@golevelup/nestjs-rabbitmq';
 import { Offer } from '@app/services/offers/offer.types';
-import { CityService } from '@app/api/cities/city.service';
 import { OfferWithCityId } from '@app/common/types';
-import { ClientType } from '@app/entities/client.entity';
 import { ApiClient } from '@app/modules/api-client/api.client';
+import { DateTime } from 'luxon';
+import { ClientType } from '@app/modules/api-client/api-client.types';
 
 @Injectable()
 export class CreatedNewOfferEvent {
@@ -23,37 +23,39 @@ export class CreatedNewOfferEvent {
     queue: 'telegram',
   })
   async handle(@RabbitPayload() message: OfferWithCityId) {
-    const city = await this.apiClient.getCity(message.cityId);
+    this.logger.log(`Handle message: ${JSON.stringify(message)}`);
+    const clientIds = await this.apiClient.findClientsIdsByFilters(
+      message.name,
+      ClientType.Telegram,
+      message.cityId,
+    );
 
-    for (const user of city.users) {
-      const canSend =
-        user.settings.filters.length === 0 ||
-        user.settings.filters.find((filter) =>
-          message.name.toLowerCase().includes(filter),
-        );
-
-      if (canSend) {
-        this.bot.telegram
-          .sendMessage(user.clients[0].clientId, this.createMessage(message), {
-            parse_mode: 'Markdown',
-          })
-          .catch((error) => {
-            this.logger.error(
-              `[Foodsi] Cannot send message to user, reason: ${
-                error.message
-              } | ${{ ...message }}`,
-            );
-          });
-      }
+    for (const clientId of clientIds) {
+      void this.bot.telegram
+        .sendMessage(clientId, this.createMessage(message), {
+          parse_mode: 'Markdown',
+        })
+        .catch((error) => {
+          this.logger.error(
+            `[Telegram] Cannot send message to user, reason: ${error.message}`,
+          );
+        });
     }
   }
 
   private createMessage(offer: Offer) {
+    const format = 'yyyy/LL/dd, HH:mm';
+
+    const openedAt = DateTime.fromISO(offer.openedAt).toFormat(format);
+    const closedAt = DateTime.fromISO(offer.closedAt).toFormat(format);
+
     return `
-*${offer.name}*:
+*${offer.name}*
 Ilość: ${offer.stock}
 Cena: ${offer.newPrice} / ${offer.oldPrice} zł
-Odbiór między: ${offer.openedAt} - ${offer.closedAt}
+Odbiór pomiędzy: 
+${openedAt},
+${closedAt}
 `;
   }
 }

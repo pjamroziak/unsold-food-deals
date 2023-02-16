@@ -43,6 +43,6 @@ export class FoodsiScrapperService {
         day: baseDate.day,
       })
       .toUTC()
-      .toJSDate();
+      .toISO();
   }
 }
