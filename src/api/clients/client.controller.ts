@@ -1,5 +1,5 @@
 import { ClientType } from '@app/entities/client.entity';
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ClientService } from './client.service';
 
 @Controller({
@@ -15,5 +15,14 @@ export class ClientController {
     @Param('clientId') clientId: string,
   ) {
     return this.clientService.findUser({ clientId, clientType });
+  }
+
+  @Get(':clientType/filter')
+  async getClientIds(
+    @Param('clientType') clientType: ClientType,
+    @Query('offerName') offerName: string,
+    @Query('cityId') cityId: number,
+  ) {
+    return this.clientService.getClientIds(offerName, clientType, cityId);
   }
 }

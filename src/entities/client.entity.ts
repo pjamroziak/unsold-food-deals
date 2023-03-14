@@ -1,6 +1,8 @@
+import { ClientRepository } from '@app/api/repositories/client.repository';
 import {
   Cascade,
   Entity,
+  EntityRepositoryType,
   Enum,
   ManyToOne,
   PrimaryKey,
@@ -12,8 +14,10 @@ export enum ClientType {
   TELEGRAM = 'telegram',
 }
 
-@Entity()
+@Entity({ customRepository: () => ClientRepository })
 export class Client {
+  [EntityRepositoryType]?: ClientRepository;
+
   @PrimaryKey()
   id!: number;
 

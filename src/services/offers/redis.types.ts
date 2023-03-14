@@ -1,9 +1,10 @@
-export type Offer = {
+export type OfferMessage = {
   id: string;
   name: string;
   stock: number;
+  cityId: number;
   oldPrice: number;
   newPrice: number;
-  openedAt: Date;
-  closedAt: Date;
+  openedAt: string;
+  closedAt: string;
 };

@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import axios, { Axios, AxiosResponse } from 'axios';
 import { ApiClientOptions } from './api-client-options.interface';
 import { MODULE_OPTIONS_TOKEN } from './api-client.module-definition';
-import { City, User } from './api-client.types';
+import { City, ClientType, User } from './api-client.types';
 import { CreateUserPayload } from './payloads/create-user.payload';
 import { FindClosestCityPayload } from './payloads/find-closest-city.payload';
 import { FindUserByClientQuery } from './queries/find-user-by-client.query';
@@ -63,6 +63,21 @@ export class ApiClient {
   async getCities() {
     const response = await this.http.get<any, AxiosResponse<City[]>>(
       '/v1/cities',
+    );
+
+    return response.data;
+  }
+
+  async findClientsIdsByFilters(
+    offerName: string,
+    clientType: ClientType,
+    cityId: number,
+  ) {
+    const response = await this.http.get<any, AxiosResponse<string[]>>(
+      `/v1/clients/${clientType}/filter`,
+      {
+        params: { offerName, cityId },
+      },
     );
 
     return response.data;

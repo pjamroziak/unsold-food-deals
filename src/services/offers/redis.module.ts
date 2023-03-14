@@ -2,8 +2,7 @@ import { RedisConfig, redisConfig } from '@app/configs/redis.config';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { OfferComparator } from './offer.comparator';
-import { OfferService } from './offer.service';
+import { RedisService } from './redis.service';
 
 @Module({
   imports: [
@@ -17,7 +16,7 @@ import { OfferService } from './offer.service';
       inject: [redisConfig.KEY],
     }),
   ],
-  providers: [OfferService, OfferComparator],
-  exports: [OfferService, OfferComparator],
+  providers: [RedisService],
+  exports: [RedisService],
 })
-export class OfferModule {}
+export class RedisServiceModule {}
