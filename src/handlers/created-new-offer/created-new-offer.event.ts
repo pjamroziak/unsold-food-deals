@@ -2,11 +2,10 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectBot } from 'nestjs-telegraf';
 import { Context, Telegraf } from 'telegraf';
 import { RabbitRPC, RabbitPayload } from '@golevelup/nestjs-rabbitmq';
-import { Offer } from '@app/services/offers/offer.types';
-import { OfferWithCityId } from '@app/common/types';
 import { ApiClient } from '@app/modules/api-client/api.client';
 import { DateTime } from 'luxon';
 import { ClientType } from '@app/modules/api-client/api-client.types';
+import { OfferMessage } from '@app/services/offers/redis.types';
 
 @Injectable()
 export class CreatedNewOfferEvent {
@@ -22,8 +21,7 @@ export class CreatedNewOfferEvent {
     exchange: 'offers',
     queue: 'telegram',
   })
-  async handle(@RabbitPayload() message: OfferWithCityId) {
-    this.logger.log(`Handle message: ${JSON.stringify(message)}`);
+  async handle(@RabbitPayload() message: OfferMessage) {
     const clientIds = await this.apiClient.findClientsIdsByFilters(
       message.name,
       ClientType.Telegram,
@@ -43,7 +41,7 @@ export class CreatedNewOfferEvent {
     }
   }
 
-  private createMessage(offer: Offer) {
+  private createMessage(offer: OfferMessage) {
     const format = 'yyyy/LL/dd, HH:mm';
 
     const openedAt = DateTime.fromISO(offer.openedAt).toFormat(format);

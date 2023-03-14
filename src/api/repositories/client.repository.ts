@@ -23,7 +23,7 @@ export class ClientRepository extends EntityRepository<Client> {
             and u.settings_id = us.id 
             and (
                 array_length(us.filters, 1) is null
-                or '${name}' like any (us.filters)
+                or '${name.replace(/'/gi, "''")}' like any (us.filters)
               );`,
     );
   }

@@ -9,7 +9,7 @@ import {
 import { rabbitmqConfig } from '@app/configs/rabbitmq.config';
 import { FoodsiClientModule } from '@app/modules';
 import { ApiClientModule } from '@app/modules/api-client/api-client.module';
-import { OfferModule } from '@app/services/offers/offer.module';
+import { RedisServiceModule } from '@app/services/offers/redis.module';
 import { RabbitMQConfig, RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
@@ -52,7 +52,7 @@ import { FoodsiScrapperTask } from './foodsi-scrapper.task';
       }),
       inject: [rabbitmqConfig.KEY],
     }),
-    OfferModule,
+    RedisServiceModule,
   ],
   providers: [FoodsiScrapperTask, FoodsiScrapperService],
 })

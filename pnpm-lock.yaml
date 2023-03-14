@@ -67,7 +67,6 @@ dependencies:
   '@nestjs/core': 9.3.2_faw27zmqjaamnhwhsycb5q3sc4
   '@nestjs/platform-fastify': 9.3.8_fnnujyxcjtinmcbby3pisnawpe
   '@nestjs/schedule': 2.2.0_dvs6bzzwlxted5pypaoawo6uwu
-  '@types/luxon': 3.2.0
   amqp-connection-manager: 4.1.10_amqplib@0.10.3
   amqplib: 0.10.3
   axios: 1.3.2_debug@4.3.4
@@ -77,7 +76,6 @@ dependencies:
   luxon: 3.2.1
   nestjs-telegraf: 2.6.3_tzrsrzqsxzkukkli6vnia6gvey
   reflect-metadata: 0.1.13
-  rimraf: 3.0.2
   rxjs: 7.8.0
   telegraf: 4.11.2
   telegraf-session-local: 2.1.1_t5at5r4bblhl6fp5236pypc3yq
@@ -90,6 +88,7 @@ devDependencies:
   '@nestjs/schematics': 9.0.4_typescript@4.9.5
   '@nestjs/testing': 9.3.2_fnnujyxcjtinmcbby3pisnawpe
   '@types/jest': 28.1.8
+  '@types/luxon': 3.2.0
   '@types/node': 16.18.12
   '@types/supertest': 2.0.12
   '@typescript-eslint/eslint-plugin': 5.50.0_go4drrxstycfikanvu45pi4vgq
@@ -100,6 +99,7 @@ devDependencies:
   eslint-plugin-prettier: 4.2.1_jqplj6qf3uqpxpu4gdyhwwasnq
   jest: 29.4.2_ghv2zugsw3zjg5rog5rhyka5ja
   prettier: 2.8.3
+  rimraf: 3.0.2
   source-map-support: 0.5.21
   supertest: 6.3.3
   ts-jest: 29.0.5_jzhsp3ae3eifadqc4vuxu2hrie
@@ -1682,7 +1682,7 @@ packages:
 
   /@types/luxon/3.2.0:
     resolution: {integrity: sha512-lGmaGFoaXHuOLXFvuju2bfvZRqxAqkHPx9Y9IQdQABrinJJshJwfNCKV+u7rR3kJbiqfTF/NhOkcxxAFrObyaA==}
-    dev: false
+    dev: true
 
   /@types/node/16.18.12:
     resolution: {integrity: sha512-vzLe5NaNMjIE3mcddFVGlAXN1LEWueUsMsOJWaT6wWMJGyljHAWHznqfnKUQWGzu7TLPrGvWdNAsvQYW+C0xtw==}
@@ -5148,6 +5148,7 @@ packages:
     hasBin: true
     dependencies:
       glob: 7.2.3
+    dev: true
 
   /rimraf/4.1.2:
     resolution: {integrity: sha512-BlIbgFryTbw3Dz6hyoWFhKk+unCcHMSkZGrTFVAx2WmttdBSonsdtRlwiuTbDqTKr+UlXIUqJVS4QT5tUzGENQ==}

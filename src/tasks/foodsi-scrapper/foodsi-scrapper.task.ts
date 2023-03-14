@@ -1,10 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { FoodsiScrapperService } from './foodsi-scrapper.service';
-import { OfferService } from '@app/services/offers/offer.service';
+import { RedisService } from '@app/services/offers/redis.service';
 import { ApiClient } from '@app/modules/api-client/api.client';
 import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
-import { OfferWithCityId } from '@app/common/types';
+import { OfferMessage } from '@app/services/offers/redis.types';
 
 @Injectable()
 export class FoodsiScrapperTask {
@@ -13,7 +13,7 @@ export class FoodsiScrapperTask {
   constructor(
     private readonly foodsiScrapperService: FoodsiScrapperService,
     private readonly amqpConnection: AmqpConnection,
-    private readonly offerService: OfferService,
+    private readonly offerService: RedisService,
     private readonly apiClient: ApiClient,
   ) {}
 
@@ -43,7 +43,7 @@ export class FoodsiScrapperTask {
     }
   }
 
-  private async publishMessage(offer: OfferWithCityId) {
+  private async publishMessage(offer: OfferMessage) {
     try {
       this.amqpConnection.publish('offers', 'telegram', offer);
       await this.offerService.set(offer);

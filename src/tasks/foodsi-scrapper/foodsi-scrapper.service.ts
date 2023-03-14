@@ -1,7 +1,7 @@
 import { Cordinates } from '@app/common/types';
 import { Restaurant } from '@app/modules';
 import { FoodsiClient } from '@app/modules/foodsi-client/foodsi.client';
-import { Offer } from '@app/services/offers/offer.types';
+import { OfferMessage } from '@app/services/offers/redis.types';
 import { Injectable } from '@nestjs/common';
 import { DateTime } from 'luxon';
 
@@ -14,7 +14,9 @@ export class FoodsiScrapperService {
     return this.mapRestaurantsToOffers(restaurants);
   }
 
-  private mapRestaurantsToOffers(restaurants: Restaurant[]): Offer[] {
+  private mapRestaurantsToOffers(
+    restaurants: Restaurant[],
+  ): Omit<OfferMessage, 'cityId'>[] {
     return restaurants.map((restaurant) => ({
       id: `foodsi:${restaurant.id}:${restaurant.package_id}`,
       name: restaurant.name,
