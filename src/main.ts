@@ -19,4 +19,4 @@ async function bootstrap() {
 
   await app.listen(port, '0.0.0.0');
 }
-bootstrap().catch();
+bootstrap().catch(console.error);

@@ -1,12 +1,12 @@
 import { Cordinates } from '@app/common/types';
 import { Restaurant } from '@app/modules';
 import { FoodsiClient } from '@app/modules/foodsi-client/foodsi.client';
-import { OfferMessage } from '@app/services/offers/redis.types';
+import { OfferMessage } from '@app/services/redis/redis.types';
 import { Injectable } from '@nestjs/common';
 import { DateTime } from 'luxon';
 
 @Injectable()
-export class FoodsiScrapperService {
+export class PublishedCityToScrapService {
   constructor(private readonly client: FoodsiClient) {}
 
   async getOffers(cordinates: Cordinates) {

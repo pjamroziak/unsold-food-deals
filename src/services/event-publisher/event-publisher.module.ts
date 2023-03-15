@@ -1,10 +1,9 @@
 import { rabbitmqConfig } from '@app/configs/rabbitmq.config';
-import { RabbitMQModule, RabbitMQConfig } from '@golevelup/nestjs-rabbitmq';
+import { RabbitMQConfig } from '@golevelup/nestjs-rabbitmq';
+import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq/lib/rabbitmq.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { RequestedScrappingOffersModule } from './requested-scrapping-offers/requested-scrapping-offers.module';
-import { PublishedOfferModule } from './published-offer/published-offer.module';
-import { PublishedCityToScrapModule } from './published-city-to-scrap/published-city-to-scrap.module';
+import { EventPublisher } from './event-publisher.service';
 
 @Module({
   imports: [
@@ -20,9 +19,8 @@ import { PublishedCityToScrapModule } from './published-city-to-scrap/published-
       }),
       inject: [rabbitmqConfig.KEY],
     }),
-    PublishedOfferModule,
-    PublishedCityToScrapModule,
-    RequestedScrappingOffersModule,
   ],
+  providers: [EventPublisher],
+  exports: [EventPublisher],
 })
-export class HandlerModule {}
+export class EventPublisherModule {}
