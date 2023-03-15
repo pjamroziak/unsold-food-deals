@@ -1,6 +1,6 @@
 unsold-food-deals
 
 Telegram Bot:
-@UnsoldFooDealsBot
+@UnsoldFoodDealsBot
 
 Temporary README.md
