@@ -5,7 +5,7 @@ import {
 import { ApiClientModule } from '@app/modules/api-client/api-client.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { CreatedNewOfferEvent } from './created-new-offer.event';
+import { PublishedOfferEvent } from './published-offer.event';
 
 @Module({
   imports: [
@@ -21,6 +21,6 @@ import { CreatedNewOfferEvent } from './created-new-offer.event';
       inject: [apiClientConfig.KEY],
     }),
   ],
-  providers: [CreatedNewOfferEvent],
+  providers: [PublishedOfferEvent],
 })
-export class CreatedNewOfferModule {}
+export class PublishedOfferModule {}

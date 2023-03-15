@@ -1,20 +1,19 @@
 import {
-  ApiClientConfig,
   apiClientConfig,
+  ApiClientConfig,
 } from '@app/configs/api-client.config';
 import {
-  FoodsiClientConfig,
   foodsiClientConfig,
+  FoodsiClientConfig,
 } from '@app/configs/foodsi-client.config';
-import { rabbitmqConfig } from '@app/configs/rabbitmq.config';
 import { FoodsiClientModule } from '@app/modules';
 import { ApiClientModule } from '@app/modules/api-client/api-client.module';
-import { RedisServiceModule } from '@app/services/offers/redis.module';
-import { RabbitMQConfig, RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
+import { EventPublisherModule } from '@app/services/event-publisher/event-publisher.module';
+import { RedisServiceModule } from '@app/services/redis/redis.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { FoodsiScrapperService } from './foodsi-scrapper.service';
-import { FoodsiScrapperTask } from './foodsi-scrapper.task';
+import { PublishedCityToScrapEvent } from './published-city-to-scrap.event';
+import { PublishedCityToScrapService } from './published-city-to-scrap.service';
 
 @Module({
   imports: [
@@ -40,20 +39,9 @@ import { FoodsiScrapperTask } from './foodsi-scrapper.task';
       }),
       inject: [apiClientConfig.KEY],
     }),
-    RabbitMQModule.forRootAsync(RabbitMQModule, {
-      imports: [
-        ConfigModule.forRoot({
-          load: [rabbitmqConfig],
-        }),
-      ],
-      useFactory: (config: RabbitMQConfig) => ({
-        ...config,
-        connectionInitOptions: { wait: false },
-      }),
-      inject: [rabbitmqConfig.KEY],
-    }),
+    EventPublisherModule,
     RedisServiceModule,
   ],
-  providers: [FoodsiScrapperTask, FoodsiScrapperService],
+  providers: [PublishedCityToScrapEvent, PublishedCityToScrapService],
 })
-export class FoodsiScrapperModule {}
+export class PublishedCityToScrapModule {}
