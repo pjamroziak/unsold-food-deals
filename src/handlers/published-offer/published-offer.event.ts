@@ -24,6 +24,7 @@ export class PublishedOfferEvent implements EventHandler {
 
   @RabbitRPC({
     exchange: 'events',
+    queue: 'monolit',
     routingKey: EventType.PublishedOffer,
   })
   async handle(@RabbitPayload() event: AsyncEvent<OfferMessage>) {
@@ -71,7 +72,7 @@ export class PublishedOfferEvent implements EventHandler {
 
     return `
 *${offer.name}*
-Ilość: ${offer.stock}
+${offer.stock === 1 ? '*Ostatnia sztuka!*' : `Ilość: ${offer.stock}`}
 Cena: ${offer.newPrice} / ${offer.oldPrice} zł
 Odbiór pomiędzy: 
 ${openedAt},

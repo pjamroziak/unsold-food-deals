@@ -23,6 +23,7 @@ export class PublishedCityToScrapEvent implements EventHandler {
 
   @RabbitRPC({
     exchange: 'events',
+    queue: 'monolit',
     routingKey: EventType.PublishedCityToScrap,
   })
   async handle(event: AsyncEvent<City>) {

@@ -19,6 +19,7 @@ export class RequestedScrappingOffersEvent implements EventHandler {
 
   @RabbitRPC({
     exchange: 'events',
+    queue: 'monolit',
     routingKey: EventType.RequestedScrappingOffers,
   })
   async handle(event: AsyncEvent<unknown>) {
