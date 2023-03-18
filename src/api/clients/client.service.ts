@@ -38,8 +38,6 @@ export class ClientService {
       cityId,
     });
 
-    console.log(clients);
-
     return clients.map(({ client_id }) => client_id);
   }
 }
