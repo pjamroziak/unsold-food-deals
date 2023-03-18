@@ -27,6 +27,6 @@ COPY --from=build /app/dist ./dist/
 COPY --from=build /app/locales ./locales/
 COPY --from=build /app/node_modules ./node_modules
 
-ENV NEW_RELIC_NO_CONFIG_FILE=true
+ENV NEW_RELIC_APPLICATION_LOGGING_FORWARDING_ENABLED=true
 EXPOSE 3000
 CMD [ "node", "dist/main.js"]
