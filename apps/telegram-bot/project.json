@@ -1,0 +1,71 @@
+{
+  "name": "telegram-bot",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/telegram-bot/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/telegram-bot",
+        "main": "apps/telegram-bot/src/main.ts",
+        "tsConfig": "apps/telegram-bot/tsconfig.app.json",
+        "assets": ["apps/telegram-bot/src/assets"],
+        "isolatedConfig": true,
+        "webpackConfig": "apps/telegram-bot/webpack.config.js"
+      },
+      "configurations": {
+        "development": {},
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "telegram-bot:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "telegram-bot:build:development",
+          "buildTargetOptions": {
+            "sourceMap": true
+          }
+        },
+        "production": {
+          "buildTarget": "telegram-bot:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/telegram-bot/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/telegram-bot/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "docker-build": {
+      "dependsOn": ["build"],
+      "command": "docker build -f apps/telegram-bot/Dockerfile . -t telegram-bot"
+    }
+  },
+  "tags": []
+}

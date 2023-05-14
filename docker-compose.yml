@@ -1,0 +1,43 @@
+services:
+  db:
+    image: mongo
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongo-user
+      MONGO_INITDB_ROOT_PASSWORD: mongo-pass
+      MONGO_INITDB_DATABASE: ufd
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+  api:
+    image: api
+    environment:
+      database__name: ufd
+      database__url: mongodb://mongo-user:mongo-pass@db:27017
+      redis__host: redis
+      redis__port: 6379
+      redis__ttl: 86400
+  scheduler:
+    image: scheduler
+    environment:
+      redis__host: redis
+      redis__port: 6379
+      redis__ttl: 86400
+      api__url: http://api:3000
+  offers-worker:
+    image: offers-worker
+    environment:
+      redis__host: redis
+      redis__port: 6379
+      redis__ttl: 86400
+      api__url: http://api:3000
+  telegram-bot:
+    image: telegram-bot
+    environment:
+      redis__host: redis
+      redis__port: 6379
+      redis__ttl: 86400
+      telegram__token: 
+      api__url: http://api:3000

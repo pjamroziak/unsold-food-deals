@@ -1,0 +1,16 @@
+{
+  "projects": {
+    "api-client": {
+      "type": "library",
+      "root": "libs/api-client",
+      "entryFile": "index",
+      "sourceRoot": "libs/api-client/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/api-client/tsconfig.lib.json"
+      }
+    }
+  },
+  "compilerOptions": {
+    "webpack": true
+  }
+}

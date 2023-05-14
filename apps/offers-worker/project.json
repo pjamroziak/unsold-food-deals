@@ -1,0 +1,67 @@
+{
+  "name": "offers-worker",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/offers-worker/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/offers-worker",
+        "main": "apps/offers-worker/src/main.ts",
+        "tsConfig": "apps/offers-worker/tsconfig.app.json",
+        "isolatedConfig": true,
+        "webpackConfig": "apps/offers-worker/webpack.config.js"
+      },
+      "configurations": {
+        "development": {},
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "offers-worker:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "offers-worker:build:development"
+        },
+        "production": {
+          "buildTarget": "offers-worker:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/offers-worker/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/offers-worker/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "docker-build": {
+      "dependsOn": ["build"],
+      "command": "docker build -f apps/offers-worker/Dockerfile . -t offers-worker"
+    }
+  },
+  "tags": []
+}

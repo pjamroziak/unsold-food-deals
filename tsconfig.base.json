@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "esModuleInterop": true,
+    "target": "ES2022",
+    "module": "CommonJS",
+    "lib": [
+      "es2020",
+      "dom"
+    ],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@unsold-food-deals/api-client": [
+        "libs/api-client/src/index.ts"
+      ],
+      "@unsold-food-deals/foodsi-client": [
+        "libs/foodsi-client/src/index.ts"
+      ],
+      "@unsold-food-deals/schemas": [
+        "libs/schemas-dto/src/index.ts"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
+}
