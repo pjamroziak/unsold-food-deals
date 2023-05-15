@@ -38,4 +38,8 @@ export class RootConfig {
   @Type(() => ApiConfig)
   @ValidateNested()
   public readonly api: ApiConfig;
+
+  @Type(() => LoggerConfig)
+  @ValidateNested()
+  public readonly logger: LoggerConfig;
 }
