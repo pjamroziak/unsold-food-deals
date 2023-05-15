@@ -11,11 +11,13 @@ import { BullModule } from '@nestjs/bullmq';
 import { SendMessageConsumerModule } from './consumers/send-message/send-message.module';
 import {
   ApiConfig,
+  LoggerConfig,
   RedisConfig,
   RootConfig,
   TelegramConfig,
 } from './app.config';
 import { TypedConfigModule, dotenvLoader } from 'nest-typed-config';
+import { LoggerModule, LoggerModuleAsyncParams } from 'nestjs-pino';
 
 const telegrafFactory = {
   inject: [TelegramConfig, RedisConfig],
@@ -56,6 +58,29 @@ const bullmqFactory = {
   },
 };
 
+const loggerFactory: LoggerModuleAsyncParams = {
+  inject: [LoggerConfig],
+  useFactory: (config: LoggerConfig) => {
+    return {
+      pinoHttp: {
+        name: 'grafanacloud-pjamroziak-logs',
+        level: 'info',
+        transport: {
+          target: 'pino-loki',
+          options: {
+            silenceErrors: false,
+            host: config.host,
+            basicAuth: {
+              username: config.username,
+              password: config.password,
+            },
+          },
+        },
+      },
+    };
+  },
+};
+
 @Module({
   imports: [
     TypedConfigModule.forRoot({
@@ -64,6 +89,7 @@ const bullmqFactory = {
         separator: '__',
       }),
     }),
+    LoggerModule.forRootAsync(loggerFactory),
     TelegrafModule.forRootAsync(telegrafFactory),
     BullModule.forRootAsync(bullmqFactory),
     ApiClientModule.registerAsync(apiClientFactory),
