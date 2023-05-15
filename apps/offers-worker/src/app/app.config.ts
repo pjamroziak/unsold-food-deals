@@ -21,6 +21,15 @@ export class ApiConfig {
   public readonly url: string;
 }
 
+export class LoggerConfig {
+  @IsString()
+  public readonly host: string;
+  @IsString()
+  public readonly username: string;
+  @IsString()
+  public readonly password: string;
+}
+
 export class RootConfig {
   @Type(() => RedisConfig)
   @ValidateNested()
@@ -29,4 +38,8 @@ export class RootConfig {
   @Type(() => ApiConfig)
   @ValidateNested()
   public readonly api: ApiConfig;
+
+  @Type(() => LoggerConfig)
+  @ValidateNested()
+  public readonly logger: LoggerConfig;
 }

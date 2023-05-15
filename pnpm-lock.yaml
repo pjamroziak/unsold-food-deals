@@ -70,6 +70,12 @@ dependencies:
   nestjs-zod:
     specifier: ^2.3.2
     version: 2.3.2(@nestjs/common@9.4.0)(@nestjs/core@9.4.0)(zod@3.21.4)
+  pino-http:
+    specifier: ^8.3.3
+    version: 8.3.3
+  pino-loki:
+    specifier: ^2.0.4
+    version: 2.0.4
   pino-pretty:
     specifier: ^10.0.0
     version: 10.0.0
@@ -4492,6 +4498,11 @@ packages:
     engines: {node: '>= 10'}
     dev: true
 
+  /commander@9.5.0:
+    resolution: {integrity: sha512-KRs7WVDKg86PWiuAqhDrAQnTXZKraVcCc6vFdL14qrZ/DcWwuRo7VoiYXalXO7S5GKpqYiVEwCbgFDfxNHKJBQ==}
+    engines: {node: ^12.20.0 || >=14}
+    dev: false
+
   /commondir@1.0.1:
     resolution: {integrity: sha512-W9pAhw0ja1Edb5GVdIF1mjZw/ASI0AlShXM83UUGe2DVr5TdAPEA1OA8m/g8zWp9x6On7gqufY+FatDbC3MDQg==}
     dev: true
@@ -7785,6 +7796,18 @@ packages:
       pino: 8.14.1
       pino-std-serializers: 6.2.1
       process-warning: 2.2.0
+    dev: false
+
+  /pino-loki@2.0.4:
+    resolution: {integrity: sha512-M2NTHBK/gKAR8bYbWOo0lVxwwWMEhyQrsgEZaaeOIRXGhblWwaLJpj4Iqe36VVuSXZXb6FvAaA/QpadCh5I1Yg==}
+    hasBin: true
+    dependencies:
+      axios: 1.4.0
+      commander: 9.5.0
+      pino-abstract-transport: 1.0.0
+      pump: 3.0.0
+    transitivePeerDependencies:
+      - debug
     dev: false
 
   /pino-pretty@10.0.0:

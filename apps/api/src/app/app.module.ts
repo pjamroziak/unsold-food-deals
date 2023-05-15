@@ -8,8 +8,14 @@ import {
 import { City, Client, User } from './entities';
 import { RoutesModule } from './routes/routes.module';
 import { redisStore } from 'cache-manager-redis-store';
-import { DatabaseConfig, RedisConfig, RootConfig } from './app.config';
+import {
+  DatabaseConfig,
+  LoggerConfig,
+  RedisConfig,
+  RootConfig,
+} from './app.config';
 import { TypedConfigModule, dotenvLoader } from 'nest-typed-config';
+import { LoggerModule, LoggerModuleAsyncParams } from 'nestjs-pino';
 
 const mikroOrmFactory: MikroOrmModuleAsyncOptions = {
   inject: [DatabaseConfig],
@@ -35,6 +41,29 @@ const redisFactory: CacheModuleAsyncOptions = {
   },
 };
 
+const loggerFactory: LoggerModuleAsyncParams = {
+  inject: [LoggerConfig],
+  useFactory: (config: LoggerConfig) => {
+    return {
+      pinoHttp: {
+        name: 'grafanacloud-pjamroziak-logs',
+        level: 'info',
+        transport: {
+          target: 'pino-loki',
+          options: {
+            silenceErrors: false,
+            host: config.host,
+            basicAuth: {
+              username: config.username,
+              password: config.password,
+            },
+          },
+        },
+      },
+    };
+  },
+};
+
 @Module({
   imports: [
     TypedConfigModule.forRoot({
@@ -43,6 +72,7 @@ const redisFactory: CacheModuleAsyncOptions = {
         separator: '__',
       }),
     }),
+    LoggerModule.forRootAsync(loggerFactory),
     CacheModule.registerAsync(redisFactory),
     MikroOrmModule.forRootAsync(mikroOrmFactory),
     RoutesModule,

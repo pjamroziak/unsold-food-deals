@@ -23,6 +23,15 @@ export class RedisConfig {
   public readonly ttl: number;
 }
 
+export class LoggerConfig {
+  @IsString()
+  public readonly host: string;
+  @IsString()
+  public readonly username: string;
+  @IsString()
+  public readonly password: string;
+}
+
 export class RootConfig {
   @Type(() => DatabaseConfig)
   @ValidateNested()
@@ -31,4 +40,8 @@ export class RootConfig {
   @Type(() => RedisConfig)
   @ValidateNested()
   public readonly redis: RedisConfig;
+
+  @Type(() => LoggerConfig)
+  @ValidateNested()
+  public readonly logger: LoggerConfig;
 }

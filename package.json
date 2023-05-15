@@ -28,6 +28,8 @@
     "nestjs-pino": "^3.2.0",
     "nestjs-telegraf": "^2.6.3",
     "nestjs-zod": "^2.3.2",
+    "pino-http": "^8.3.3",
+    "pino-loki": "^2.0.4",
     "pino-pretty": "^10.0.0",
     "redis": "^4.6.6",
     "reflect-metadata": "^0.1.13",
