@@ -19,6 +19,9 @@ services:
       redis__host: redis
       redis__port: 6379
       redis__ttl: 86400
+      logger__host: test
+      logger__username: test
+      logger__password: test
   scheduler:
     image: scheduler
     environment:
@@ -26,6 +29,9 @@ services:
       redis__port: 6379
       redis__ttl: 86400
       api__url: http://api:3000
+      logger__host: test
+      logger__username: test
+      logger__password: test
   offers-worker:
     image: offers-worker
     environment:
@@ -33,6 +39,9 @@ services:
       redis__port: 6379
       redis__ttl: 86400
       api__url: http://api:3000
+      logger__host: test
+      logger__username: test
+      logger__password: test
   telegram-bot:
     image: telegram-bot
     environment:
@@ -41,3 +50,6 @@ services:
       redis__ttl: 86400
       telegram__token: 
       api__url: http://api:3000
+      logger__host: test
+      logger__username: test
+      logger__password: test
