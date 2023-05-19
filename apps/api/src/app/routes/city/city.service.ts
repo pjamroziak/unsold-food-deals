@@ -50,9 +50,12 @@ export class CityService {
     }
 
     if (cities.length === 0) {
-      this.logger.warn('Database return empty list of available cities', {
-        cordinates,
-      });
+      this.logger.warn(
+        {
+          cordinates,
+        },
+        'Database return empty list of available cities'
+      );
       throw new NotFoundException('List of available cities is empty');
     }
 
@@ -104,7 +107,7 @@ export class CityService {
     try {
       await this.cityRepository.persistAndFlush(wrap(oldCity).assign(payload));
     } catch (error) {
-      this.logger.error('Updating City failed', { id, payload, error });
+      this.logger.error({ id, payload, error }, 'Updating City failed');
       throw new InternalServerErrorException(error);
     }
   }

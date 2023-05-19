@@ -33,12 +33,12 @@ export class SendMessageConsumer extends WorkerHost {
 
   @OnWorkerEvent('failed')
   onFailed(job, error) {
-    this.logger.error('Failed processing "send-message" job', { error });
+    this.logger.error({ error }, 'Failed processing "send-message" job');
   }
 
   @OnWorkerEvent('error')
   onError(job, error) {
-    this.logger.error(error);
+    this.logger.error({ error });
   }
 
   @OnWorkerEvent('completed')

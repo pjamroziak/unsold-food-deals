@@ -62,15 +62,18 @@ export class CoreUpdate {
       }
 
       if (users.results.length > 1) {
-        this.logger.warn('API return more than one client', { chatId });
+        this.logger.warn({ chatId }, 'API return more than one client');
       }
 
       return users.results[0].id;
     } catch (error) {
-      this.logger.error('Request for getting clients failed', {
-        chatId,
-        error,
-      });
+      this.logger.error(
+        {
+          chatId,
+          error,
+        },
+        'Request for getting clients failed'
+      );
 
       throw error;
     }
