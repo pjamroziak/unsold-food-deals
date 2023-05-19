@@ -23,7 +23,7 @@ const loggerFactory: LoggerModuleAsyncParams = {
   useFactory: (config: LoggerConfig) => {
     return {
       pinoHttp: {
-        name: 'grafanacloud-pjamroziak-logs',
+        name: 'grafanacloud-scheduler',
         level: 'info',
         transport: {
           target: 'pino-loki',
