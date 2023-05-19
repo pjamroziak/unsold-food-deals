@@ -45,14 +45,15 @@ export class RequestedScrapByCityConsumer extends WorkerHost {
 
   @OnWorkerEvent('failed')
   onFailed(job, error) {
-    this.logger.error('Failed processing "requested-scrap-by-city" event', {
-      error,
-    });
+    this.logger.error(
+      { error },
+      'Failed processing "requested-scrap-by-city" event'
+    );
   }
 
   @OnWorkerEvent('error')
   onError(job, error) {
-    this.logger.error(error);
+    this.logger.error({ error });
   }
 
   @OnWorkerEvent('completed')

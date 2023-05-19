@@ -52,7 +52,7 @@ export class UserService {
     try {
       await this.userRepository.persistAndFlush(wrap(oldUser).assign(payload));
     } catch (error) {
-      this.logger.error('Updating User failed', { id, payload, error });
+      this.logger.error({ id, payload, error }, 'Updating User failed');
       throw new InternalServerErrorException(error);
     }
   }

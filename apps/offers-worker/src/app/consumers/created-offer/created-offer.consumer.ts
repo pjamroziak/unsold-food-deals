@@ -39,12 +39,12 @@ export class CreatedOfferConsumer extends WorkerHost {
 
   @OnWorkerEvent('failed')
   onFailed(job, error) {
-    this.logger.error('Failed processing "created-offer" job', { error });
+    this.logger.error({ error }, 'Failed processing "created-offer" job');
   }
 
   @OnWorkerEvent('error')
   onError(job, error) {
-    this.logger.error(error);
+    this.logger.error({ error });
   }
 
   @OnWorkerEvent('completed')

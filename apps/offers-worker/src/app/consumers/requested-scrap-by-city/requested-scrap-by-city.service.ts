@@ -33,14 +33,12 @@ export class RequestedScrapByCityService {
       closedAt: this.parseDate(restaurant.package_day.collection_day.closed_at),
     }));
 
-    this.logger.log(`Found ${offers.length} offers`, { city: city.name });
+    this.logger.log({ city: city.name }, `Found ${offers.length} offers`);
     return offers;
   }
 
   private async fetchRestaurants(city: City) {
-    this.logger.log('Start scrapping Foodsi restaurants', {
-      city: city.name,
-    });
+    this.logger.log({ city: city.name }, 'Start scrapping Foodsi restaurants');
 
     const restaurants: Restaurant[] = [];
 
@@ -62,10 +60,13 @@ export class RequestedScrapByCityService {
       request.page += 1;
     } while (page.total_pages > page.current_page);
 
-    this.logger.log(`Completed scrapping Foodsi restaurants`, {
-      city: city.name,
-      restaurantsCount: restaurants.length,
-    });
+    this.logger.log(
+      {
+        city: city.name,
+        restaurantsCount: restaurants.length,
+      },
+      `Completed scrapping Foodsi restaurants`
+    );
 
     return restaurants;
   }

@@ -70,7 +70,7 @@ export class ClientService {
         wrap(oldClient).assign(payload)
       );
     } catch (error) {
-      this.logger.error('Updating Client failed', { id, payload, error });
+      this.logger.error({ id, payload, error }, 'Updating Client failed');
       throw new InternalServerErrorException(error);
     }
   }

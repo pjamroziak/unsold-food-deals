@@ -14,15 +14,18 @@ export class UnexpectedExceptionFilter implements ExceptionFilter {
     const ctx = telegrafHost.getContext<Context & I18nContext>();
 
     if (isAxiosError(exception)) {
-      this.logger.error('Unhandled Axios exception', {
-        errorMessage: exception.message,
-        status: exception.status,
-        url: exception.response.config.url,
-        method: exception.response.config.method,
-        data: exception.response.data,
-      });
+      this.logger.error(
+        {
+          errorMessage: exception.message,
+          status: exception.status,
+          url: exception.response.config.url,
+          method: exception.response.config.method,
+          data: exception.response.data,
+        },
+        'Unhandled HTTP exception'
+      );
     } else {
-      this.logger.error(exception);
+      this.logger.error({ exception });
     }
 
     await ctx.reply(ctx.t('unexpected-error'), DefaultParseMode);
