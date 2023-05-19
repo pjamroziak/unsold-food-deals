@@ -26,18 +26,28 @@ export class CreatedOfferService {
   }
 
   parseOfferToMessagePayload(offer: Offer) {
-    const format = 'yyyy/LL/dd, HH:mm';
+    return offer.stock === 1
+      ? this.createLastOfferMessage(offer)
+      : this.createOfferMessage(offer);
+  }
+
+  private createOfferMessage(offer: Offer) {
+    const format = 'HH:mm';
 
     const openedAt = DateTime.fromISO(offer.openedAt).toFormat(format);
     const closedAt = DateTime.fromISO(offer.closedAt).toFormat(format);
 
     return `
-*${offer.name}*
-${offer.stock === 1 ? '*Ostatnia sztuka!*' : `Ilość: ${offer.stock}`}
-Cena: ${offer.newPrice} / ${offer.oldPrice} zł
-Odbiór pomiędzy: 
-${openedAt},
-${closedAt}
+🥡 Pojawiły się ${offer.stock} paczki w *${offer.name}*
+💸 ${offer.newPrice} / ${offer.oldPrice} zł 
+⌛ ${openedAt}-${closedAt}
+`;
+  }
+
+  private createLastOfferMessage(offer: Offer) {
+    return `
+❗ *Ostatnia* paczka w *${offer.name}*
+💸 *${offer.newPrice}* / ${offer.oldPrice} zł 
 `;
   }
 }
