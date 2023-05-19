@@ -12,6 +12,9 @@ city-list = Przeszukuje oferty z miast:
 
   { $cities }
 unexpected-error = Ups...! Coś poszło nie tak, spróbuj ponownie później 😥
+help = Jeżeli potrzebujesz pomocy:
+  - grupa na Telegramie - <https://t.me/unsoldfooddeals>
+  - repozytorium na GitHubie - <https://github.com/pjamroziak/unsold-food-deals>
 setup-welcome = Potrzebuje twoją lokalizację, aby przypisać cię do danego miasta 🦐🍜
   Możesz mi ją wysłać na dwa różne sposoby:
   - użyj przycisku poniżej
