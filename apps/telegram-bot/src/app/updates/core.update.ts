@@ -26,7 +26,7 @@ export class CoreUpdate {
       name: ctx.from.first_name,
     });
 
-    ctx.reply(message, DefaultParseMode);
+    await ctx.reply(message, DefaultParseMode);
   }
 
   @Command('cities')
@@ -40,6 +40,11 @@ export class CoreUpdate {
   @Command('setup')
   async setup(@Ctx() ctx: CoreContext) {
     await ctx.scene.enter('setup');
+  }
+
+  @Command('help')
+  async help(@Ctx() ctx: CoreContext) {
+    await ctx.reply(ctx.t('help'), DefaultParseMode);
   }
 
   private async refreshSession(ctx: CoreContext) {
