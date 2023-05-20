@@ -38,6 +38,12 @@ export class CreatedOfferService {
       const clients = response.results;
 
       for (const { chatId } of clients) {
+        this.logger.log(
+          {
+            chatId,
+          },
+          'sending message to client'
+        );
         this.queue
           .add('send-message', { chatId, payload })
           .catch((error) =>
@@ -62,8 +68,8 @@ export class CreatedOfferService {
     const closedAt = DateTime.fromISO(offer.closedAt).toFormat(format);
 
     return `
-🥡 Pojawiły się ${offer.stock} paczki w *${offer.name}*
-💸 ${offer.newPrice} / ${offer.oldPrice} zł 
+🥡 Pojawiło się ${offer.stock} paczek w *${offer.name}*
+💸 *${offer.newPrice}* / ${offer.oldPrice} zł 
 ⌛ ${openedAt}-${closedAt}
 `;
   }

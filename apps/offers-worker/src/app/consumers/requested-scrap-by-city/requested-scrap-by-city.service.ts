@@ -33,7 +33,6 @@ export class RequestedScrapByCityService {
       closedAt: this.parseDate(restaurant.package_day.collection_day.closed_at),
     }));
 
-    this.logger.log({ city: city.name }, `Found ${offers.length} offers`);
     return offers;
   }
 

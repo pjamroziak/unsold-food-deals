@@ -40,7 +40,7 @@ export class RequestedScrapByCityConsumer extends WorkerHost {
 
   @OnWorkerEvent('active')
   onActive() {
-    this.logger.debug('Started processing "requested-scrap-by-city" event');
+    this.logger.log('Started processing "requested-scrap-by-city" event');
   }
 
   @OnWorkerEvent('failed')
@@ -58,6 +58,6 @@ export class RequestedScrapByCityConsumer extends WorkerHost {
 
   @OnWorkerEvent('completed')
   onCompleted() {
-    this.logger.debug('Finished processing "requested-scrap-by-city" event');
+    this.logger.log('Finished processing "requested-scrap-by-city" event');
   }
 }
