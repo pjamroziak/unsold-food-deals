@@ -1,28 +1,52 @@
-import { Injectable } from '@nestjs/common';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Injectable, Logger } from '@nestjs/common';
 import { ApiClient } from '@unsold-food-deals/api-client';
-import { Offer, Client } from '@unsold-food-deals/schemas';
+import { Offer } from '@unsold-food-deals/schemas';
+import { Queue } from 'bullmq';
 import { DateTime } from 'luxon';
 
 @Injectable()
 export class CreatedOfferService {
-  constructor(private readonly apiClient: ApiClient) {}
+  private readonly logger = new Logger(CreatedOfferService.name);
 
-  async getClients(cityId: string) {
-    const clients: Client[] = [];
+  constructor(
+    @InjectQueue('send-message')
+    private readonly queue: Queue,
+    private readonly apiClient: ApiClient
+  ) {}
 
-    let count = 0;
-    do {
+  async sendMessagesToClients(cityId: string, payload: string) {
+    const firstResult = await this.apiClient.client.find({
+      city: cityId,
+      enabled: true,
+      limit: 1,
+      offset: 0,
+    });
+
+    const limit = 100;
+    const count = firstResult.count;
+    let offset = 0;
+
+    while (offset < count) {
       const response = await this.apiClient.client.find({
         city: cityId,
+        enabled: true,
+        limit,
+        offset,
       });
 
-      count = response.count;
-      const results = response.results;
+      const clients = response.results;
 
-      clients.push(...results);
-    } while (clients.length < count);
+      for (const { chatId } of clients) {
+        this.queue
+          .add('send-message', { chatId, payload })
+          .catch((error) =>
+            this.logger.error({ error }, 'cannot send message to client')
+          );
+      }
 
-    return clients;
+      offset += clients.length;
+    }
   }
 
   parseOfferToMessagePayload(offer: Offer) {
