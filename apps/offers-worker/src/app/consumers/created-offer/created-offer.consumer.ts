@@ -21,7 +21,7 @@ export class CreatedOfferConsumer extends WorkerHost {
 
   @OnWorkerEvent('active')
   onActive() {
-    this.logger.debug('Started processing "created-offer" job');
+    this.logger.log('Started processing "created-offer" job');
   }
 
   @OnWorkerEvent('failed')
@@ -36,6 +36,6 @@ export class CreatedOfferConsumer extends WorkerHost {
 
   @OnWorkerEvent('completed')
   onCompleted() {
-    this.logger.debug('Finished processing "created-offer" job');
+    this.logger.log('Finished processing "created-offer" job');
   }
 }
