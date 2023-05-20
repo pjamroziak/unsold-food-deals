@@ -32,7 +32,10 @@ export class RequestedScrapByCityConsumer extends WorkerHost {
     for (const offer of offers) {
       const isExist = await this.cacheManager.get(offer.id);
       if (isExist === null) {
-        await this.offersQueue.add('created-offer', offer);
+        await this.offersQueue.add('created-offer', offer, {
+          removeOnComplete: true,
+          removeOnFail: true,
+        });
         this.cacheManager.set(offer.id, offer);
       }
     }

@@ -45,7 +45,11 @@ export class CreatedOfferService {
           'sending message to client'
         );
         this.queue
-          .add('send-message', { chatId, payload })
+          .add(
+            'send-message',
+            { chatId, payload },
+            { removeOnComplete: true, removeOnFail: true }
+          )
           .catch((error) =>
             this.logger.error({ error }, 'cannot send message to client')
           );
