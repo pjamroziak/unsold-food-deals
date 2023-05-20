@@ -26,7 +26,7 @@ export class ApiCityService {
   }
 
   async find(query?: FindCityDto) {
-    const response = await this.http.get('api/city', { params: query });
+    const response = await this.http.get('api/city', { data: query });
     return PaginatedCitySchema.parse(response.data);
   }
 

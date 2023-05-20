@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  Query,
-  Post,
-  Body,
-  Patch,
-  Param,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param } from '@nestjs/common';
 import { ClientService } from './client.service';
 import {
   CreateClientDto,
@@ -20,7 +12,7 @@ export class ClientController {
   constructor(private readonly clientService: ClientService) {}
 
   @Get()
-  async find(@Query() payload: FindClientDto) {
+  async find(@Body() payload: FindClientDto) {
     return this.clientService.retrieveBy(payload);
   }
 

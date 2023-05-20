@@ -25,7 +25,7 @@ export class ApiUserService {
   }
 
   async find(query: FindUserDto) {
-    const response = await this.http.get('api/user', { params: query });
+    const response = await this.http.get('api/user', { data: query });
     return PaginatedUserSchema.parse(response.data);
   }
 
