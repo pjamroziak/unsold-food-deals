@@ -30,9 +30,10 @@ export class CityService {
   ) {}
 
   async retrieveBy(payload: FindCityDto) {
-    const result = await this.cityRepository.findAndCount(payload, {
-      offset: payload.offset,
-      limit: payload.limit,
+    const { limit, offset, ...query } = payload;
+    const result = await this.cityRepository.findAndCount(query, {
+      offset,
+      limit,
     });
 
     return parsePaginated(result);

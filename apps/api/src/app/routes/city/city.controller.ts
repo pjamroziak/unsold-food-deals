@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { CityService } from './city.service';
 import {
   CordinatesDto,
@@ -21,7 +13,7 @@ export class CityController {
   constructor(private readonly cityService: CityService) {}
 
   @Get()
-  async find(@Query() payload: FindCityDto) {
+  async find(@Body() payload: FindCityDto) {
     return this.cityService.retrieveBy(payload);
   }
 

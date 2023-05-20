@@ -25,7 +25,7 @@ export class ApiClientService {
   }
 
   async find(query: FindClientDto) {
-    const response = await this.http.get('api/client', { params: query });
+    const response = await this.http.get('api/client', { data: query });
     return PaginatedClientSchema.parse(response.data);
   }
 

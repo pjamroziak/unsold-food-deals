@@ -24,9 +24,10 @@ export class UserService {
   ) {}
 
   async retrieveBy(payload: FindUserDto) {
-    const result = await this.userRepository.findAndCount(payload, {
-      offset: payload.offset,
-      limit: payload.limit,
+    const { limit, offset, ...query } = payload;
+    const result = await this.userRepository.findAndCount(query, {
+      offset,
+      limit,
     });
 
     return parsePaginated(result);
