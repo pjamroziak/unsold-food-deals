@@ -29,10 +29,14 @@ export class ScriptService {
         },
         'sending message to clients'
       );
-      await this.queue.add('send-message', {
-        chatId: client.chatId,
-        payload,
-      });
+      await this.queue.add(
+        'send-message',
+        {
+          chatId: client.chatId,
+          payload,
+        },
+        { removeOnComplete: true, removeOnFail: true }
+      );
     }
   }
 }

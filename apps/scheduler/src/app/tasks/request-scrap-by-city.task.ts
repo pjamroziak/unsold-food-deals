@@ -20,7 +20,10 @@ export class RequestScrapByCityTask {
     try {
       const cities = await this.apiClient.city.find();
       for (const city of cities.results) {
-        await this.queue.add('requested-scrap-by-city', city);
+        await this.queue.add('requested-scrap-by-city', city, {
+          removeOnComplete: true,
+          removeOnFail: true,
+        });
         this.logger.log({ city: city.name }, 'sent request for scrapping city');
       }
     } catch (error) {
