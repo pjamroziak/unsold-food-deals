@@ -37,8 +37,6 @@ export class RequestedScrapByCityService {
   }
 
   private async fetchRestaurants(city: City) {
-    this.logger.log({ city: city.name }, 'Start scrapping Foodsi restaurants');
-
     const restaurants: Restaurant[] = [];
 
     const pageIndex = FIRST_PAGE_INDEX;
@@ -64,7 +62,7 @@ export class RequestedScrapByCityService {
         city: city.name,
         restaurantsCount: restaurants.length,
       },
-      `Completed scrapping Foodsi restaurants`
+      `completed scrapping Foodsi restaurants`
     );
 
     return restaurants;

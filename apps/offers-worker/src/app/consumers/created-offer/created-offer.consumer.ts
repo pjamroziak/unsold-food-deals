@@ -21,12 +21,12 @@ export class CreatedOfferConsumer extends WorkerHost {
 
   @OnWorkerEvent('active')
   onActive() {
-    this.logger.log('Started processing "created-offer" job');
+    this.logger.log('started processing "created-offer" job');
   }
 
   @OnWorkerEvent('failed')
   onFailed(job, error) {
-    this.logger.error({ error }, 'Failed processing "created-offer" job');
+    this.logger.error({ error }, 'failed processing "created-offer" job');
   }
 
   @OnWorkerEvent('error')
@@ -36,6 +36,6 @@ export class CreatedOfferConsumer extends WorkerHost {
 
   @OnWorkerEvent('completed')
   onCompleted() {
-    this.logger.log('Finished processing "created-offer" job');
+    this.logger.log('finished processing "created-offer" job');
   }
 }
