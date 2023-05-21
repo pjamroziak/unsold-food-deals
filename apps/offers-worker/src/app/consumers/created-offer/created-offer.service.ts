@@ -37,23 +37,22 @@ export class CreatedOfferService {
 
       const clients = response.results;
 
-      for (const { chatId } of clients) {
-        this.logger.log(
-          {
-            chatId,
-          },
-          'sending message to client'
-        );
-        this.queue
-          .add(
-            'send-message',
-            { chatId, payload },
-            { removeOnComplete: true, removeOnFail: true }
-          )
-          .catch((error) =>
-            this.logger.error({ error }, 'cannot send message to client')
-          );
-      }
+      const jobs = clients.map(({ chatId }) => ({
+        name: 'send-message',
+        data: { chatId, payload },
+        opts: { removeOnComplete: true, removeOnFail: true },
+      }));
+
+      await this.queue.addBulk(jobs);
+
+      this.logger.log(
+        {
+          clients: clients.map((client) => ({
+            id: client.id,
+          })),
+        },
+        'sent message to clients'
+      );
 
       offset += clients.length;
     }
@@ -71,8 +70,10 @@ export class CreatedOfferService {
     const openedAt = DateTime.fromISO(offer.openedAt).toFormat(format);
     const closedAt = DateTime.fromISO(offer.closedAt).toFormat(format);
 
+    const offerText = this.getAppearOfferVarietyText(offer.stock, offer.name);
+
     return `
-🥡 Pojawiło się ${offer.stock} paczek w *${offer.name}*
+🥡 ${offerText}
 💸 *${offer.newPrice}* / ${offer.oldPrice} zł 
 ⌛ ${openedAt}-${closedAt}
 `;
@@ -83,5 +84,13 @@ export class CreatedOfferService {
 ❗ *Ostatnia* paczka w *${offer.name}*
 💸 *${offer.newPrice}* / ${offer.oldPrice} zł 
 `;
+  }
+
+  private getAppearOfferVarietyText(count: number, offerName: string) {
+    if (count <= 4) {
+      return `Pojawiły się *${count}* paczki w *${offerName}*`;
+    }
+
+    return `Pojawiło się *${count}* paczek w *${offerName}*`;
   }
 }
