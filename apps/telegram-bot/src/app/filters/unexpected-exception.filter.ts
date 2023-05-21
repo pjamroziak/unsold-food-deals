@@ -22,10 +22,10 @@ export class UnexpectedExceptionFilter implements ExceptionFilter {
           method: exception.response.config.method,
           data: exception.response.data,
         },
-        'Unhandled HTTP exception'
+        'unhandled HTTP exception'
       );
     } else {
-      this.logger.error({ exception });
+      this.logger.error({ exception }, 'unhandled exception');
     }
 
     await ctx.reply(ctx.t('unexpected-error'), DefaultParseMode);
