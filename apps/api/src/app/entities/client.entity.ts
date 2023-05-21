@@ -17,13 +17,13 @@ export class Client extends BaseEntity {
 
   @ManyToOne({
     entity: () => City,
-    serializer: (value) => value.id,
+    serializer: (value) => (value ? value.id : undefined),
   })
   city?: City;
 
   @ManyToOne({
     entity: () => User,
-    serializer: (value) => value.id,
+    serializer: (value) => (value ? value.id : undefined),
   })
   user?: User;
 }

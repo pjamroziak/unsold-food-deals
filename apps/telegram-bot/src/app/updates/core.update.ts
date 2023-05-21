@@ -57,20 +57,24 @@ export class CoreUpdate {
 
   private async getClientId(chatId: string) {
     try {
-      const users = await this.apiClient.client.find({
+      const clients = await this.apiClient.client.find({
         type: ClientType.TELEGRAM,
         chatId,
       });
 
-      if (!users || users.results.length === 0) {
+      if (
+        !clients ||
+        clients.results.length === 0 ||
+        !clients.results[0].user
+      ) {
         return null;
       }
 
-      if (users.results.length > 1) {
+      if (clients.results.length > 1) {
         this.logger.warn({ chatId }, 'API return more than one client');
       }
 
-      return users.results[0].id;
+      return clients.results[0].id;
     } catch (error) {
       this.logger.error(
         {

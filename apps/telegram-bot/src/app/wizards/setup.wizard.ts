@@ -119,6 +119,7 @@ export class SetupWizard {
 
       await this.apiClient.client.update(client.id, {
         user: userId,
+        enabled: true,
         city: ctx.session.setup.cityId,
       });
     }
