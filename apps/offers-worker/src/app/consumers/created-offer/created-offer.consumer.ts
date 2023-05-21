@@ -4,7 +4,9 @@ import { OfferSchema } from '@unsold-food-deals/schemas';
 import { Job } from 'bullmq';
 import { CreatedOfferService } from './created-offer.service';
 
-@Processor('created-offer')
+@Processor('created-offer', {
+  concurrency: 10,
+})
 export class CreatedOfferConsumer extends WorkerHost {
   private readonly logger = new Logger(CreatedOfferConsumer.name);
 
