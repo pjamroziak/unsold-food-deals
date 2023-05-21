@@ -28,12 +28,12 @@ export class SendMessageConsumer extends WorkerHost {
 
   @OnWorkerEvent('active')
   onActive() {
-    this.logger.debug('Started processing "send-message" event');
+    this.logger.log('started processing "send-message" event');
   }
 
   @OnWorkerEvent('failed')
   onFailed(job, error) {
-    this.logger.error({ error }, 'Failed processing "send-message" job');
+    this.logger.error({ error }, 'failed processing "send-message" job');
   }
 
   @OnWorkerEvent('error')
@@ -43,6 +43,6 @@ export class SendMessageConsumer extends WorkerHost {
 
   @OnWorkerEvent('completed')
   onCompleted() {
-    this.logger.debug('Finished processing "send-message" event');
+    this.logger.log('finished processing "send-message" event');
   }
 }
