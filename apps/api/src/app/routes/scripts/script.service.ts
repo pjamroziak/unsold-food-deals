@@ -18,25 +18,21 @@ export class ScriptService {
   ) {}
 
   async sendMessageToClients(payload: SendMessageToClientsDto) {
-    const clients = await this.clientRepository.find({ id: payload.clients });
+    const clients = await this.clientRepository.find({
+      id: { $in: payload.clients },
+    });
 
-    for (const client of clients) {
-      this.logger.log(
-        {
-          clientId: client._id,
+    await this.queue.addBulk(
+      clients.map((client) => ({
+        name: 'send-message',
+        data: {
           chatId: client.chatId,
-          message: payload.message,
+          payload: payload.message,
         },
-        'sending message to clients'
-      );
-      await this.queue.add(
-        'send-message',
-        {
-          chatId: client.chatId,
-          payload,
-        },
-        { removeOnComplete: true, removeOnFail: true }
-      );
-    }
+        opts: { removeOnComplete: true, removeOnFail: true },
+      }))
+    );
+
+    this.logger.log({ clients: payload.clients }, 'sent message to clients');
   }
 }
