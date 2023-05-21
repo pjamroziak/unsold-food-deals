@@ -5,7 +5,7 @@ import { SendMessageConsumer } from './send-message.consumer';
 @Module({
   imports: [
     BullModule.registerQueue({
-      name: 'messages',
+      name: 'send-message',
     }),
   ],
   providers: [SendMessageConsumer],

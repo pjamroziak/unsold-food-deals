@@ -6,7 +6,9 @@ import { Job } from 'bullmq';
 import { MessageSchema } from '@unsold-food-deals/schemas';
 import { DefaultParseMode } from '../../constants';
 
-@Processor('send-message')
+@Processor('send-message', {
+  concurrency: 10,
+})
 export class SendMessageConsumer extends WorkerHost {
   private readonly logger = new Logger(SendMessageConsumer.name);
   private readonly bot: Telegraf;
