@@ -16,6 +16,8 @@ import {
 } from './app.config';
 import { TypedConfigModule, dotenvLoader } from 'nest-typed-config';
 import { LoggerModule, LoggerModuleAsyncParams } from 'nestjs-pino';
+import { BullModule } from '@nestjs/bullmq';
+import * as Bull from 'bullmq';
 
 const mikroOrmFactory: MikroOrmModuleAsyncOptions = {
   inject: [DatabaseConfig],
@@ -64,6 +66,21 @@ const loggerFactory: LoggerModuleAsyncParams = {
   },
 };
 
+const bullmqFactory = {
+  inject: [RedisConfig],
+  useFactory: (config: RedisConfig): Bull.QueueOptions => {
+    return {
+      defaultJobOptions: {
+        removeOnComplete: true,
+      },
+      connection: {
+        host: config.host,
+        port: config.port,
+      },
+    };
+  },
+};
+
 @Module({
   imports: [
     TypedConfigModule.forRoot({
@@ -74,6 +91,7 @@ const loggerFactory: LoggerModuleAsyncParams = {
     }),
     LoggerModule.forRootAsync(loggerFactory),
     CacheModule.registerAsync(redisFactory),
+    BullModule.forRootAsync(bullmqFactory),
     MikroOrmModule.forRootAsync(mikroOrmFactory),
     RoutesModule,
   ],
