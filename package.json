@@ -24,6 +24,7 @@
     "class-validator": "^0.14.0",
     "dotenv": "^16.0.3",
     "luxon": "^3.3.0",
+    "moize": "^6.1.6",
     "nest-typed-config": "^2.5.2",
     "nestjs-pino": "^3.2.0",
     "nestjs-telegraf": "^2.6.3",
