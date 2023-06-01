@@ -1,9 +1,10 @@
-import { Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import axios, { Axios } from 'axios';
 import { RestaurantRequest } from '../types';
 import { RestaurantPageSchema } from '@unsold-food-deals/schemas';
 import { AuthService } from './auth.service';
 
+@Injectable()
 export class RestaurantService {
   private readonly logger = new Logger(RestaurantService.name);
   private readonly http: Axios;
