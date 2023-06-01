@@ -38,11 +38,10 @@ export class AuthService {
     });
 
     const { headers } = response;
-
     return {
-      'Access-Token': headers['Access-Token'],
-      Client: headers['Client'],
-      Uid: headers['Uid'],
+      'Access-Token': headers['access-token'],
+      Client: headers['client'],
+      Uid: headers['uid'],
     };
   }
 }
