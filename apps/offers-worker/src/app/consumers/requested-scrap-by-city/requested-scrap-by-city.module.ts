@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { RequestedScrapByCityConsumer } from './requested-scrap-by-city.consumer';
 import { RequestedScrapByCityService } from './requested-scrap-by-city.service';
 import { BullModule } from '@nestjs/bullmq';
-import { FoodsiClientModule } from '@unsold-food-deals/foodsi-client';
 
 @Module({
   imports: [
@@ -12,7 +11,6 @@ import { FoodsiClientModule } from '@unsold-food-deals/foodsi-client';
     BullModule.registerQueue({
       name: 'created-offer',
     }),
-    FoodsiClientModule,
   ],
   providers: [RequestedScrapByCityConsumer, RequestedScrapByCityService],
 })

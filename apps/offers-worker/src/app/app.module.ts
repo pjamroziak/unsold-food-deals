@@ -1,8 +1,13 @@
-import { Module } from '@nestjs/common';
+import { ConfigurableModuleAsyncOptions, Module } from '@nestjs/common';
 import * as Bull from 'bullmq';
 import { BullModule } from '@nestjs/bullmq';
 import { ConsumersModule } from './consumers/consumers.module';
-import { LoggerConfig, RedisConfig, RootConfig } from './app.config';
+import {
+  FoodsiConfig,
+  LoggerConfig,
+  RedisConfig,
+  RootConfig,
+} from './app.config';
 import { TypedConfigModule, dotenvLoader } from 'nest-typed-config';
 import {
   CacheModule,
@@ -11,6 +16,10 @@ import {
 } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-store';
 import { LoggerModule, LoggerModuleAsyncParams } from 'nestjs-pino';
+import {
+  FoodsiClientModule,
+  FoodsiClientOptions,
+} from '@unsold-food-deals/foodsi-client';
 
 const bullmqFactory = {
   inject: [RedisConfig],
@@ -62,6 +71,19 @@ const loggerFactory: LoggerModuleAsyncParams = {
   },
 };
 
+const foodsiClientFactory: ConfigurableModuleAsyncOptions<FoodsiClientOptions> =
+  {
+    inject: [FoodsiConfig],
+    useFactory: (config: FoodsiConfig) => {
+      return {
+        auth: {
+          email: config.email,
+          password: config.password,
+        },
+      };
+    },
+  };
+
 @Module({
   imports: [
     TypedConfigModule.forRoot({
@@ -73,6 +95,7 @@ const loggerFactory: LoggerModuleAsyncParams = {
     LoggerModule.forRootAsync(loggerFactory),
     BullModule.forRootAsync(bullmqFactory),
     CacheModule.registerAsync(redisFactory),
+    FoodsiClientModule.forRootAsync(foodsiClientFactory),
     ConsumersModule,
   ],
 })

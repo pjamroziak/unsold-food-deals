@@ -30,6 +30,13 @@ export class LoggerConfig {
   public readonly password: string;
 }
 
+export class FoodsiConfig {
+  @IsString()
+  public readonly email: string;
+  @IsString()
+  public readonly password: string;
+}
+
 export class RootConfig {
   @Type(() => RedisConfig)
   @ValidateNested()
@@ -42,4 +49,8 @@ export class RootConfig {
   @Type(() => LoggerConfig)
   @ValidateNested()
   public readonly logger: LoggerConfig;
+
+  @Type(() => FoodsiConfig)
+  @ValidateNested()
+  public readonly foodsi: FoodsiConfig;
 }
