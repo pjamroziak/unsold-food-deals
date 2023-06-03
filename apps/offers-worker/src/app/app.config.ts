@@ -30,7 +30,7 @@ export class LoggerConfig {
   public readonly password: string;
 }
 
-export class FoodsiClientConfig {
+export class FoodsiConfig {
   @IsString()
   public readonly email: string;
   @IsString()
@@ -50,7 +50,7 @@ export class RootConfig {
   @ValidateNested()
   public readonly logger: LoggerConfig;
 
-  @Type(() => FoodsiClientConfig)
+  @Type(() => FoodsiConfig)
   @ValidateNested()
-  public readonly foodsi: FoodsiClientConfig;
+  public readonly foodsi: FoodsiConfig;
 }

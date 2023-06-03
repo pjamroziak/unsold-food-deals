@@ -3,7 +3,7 @@ import * as Bull from 'bullmq';
 import { BullModule } from '@nestjs/bullmq';
 import { ConsumersModule } from './consumers/consumers.module';
 import {
-  FoodsiClientConfig,
+  FoodsiConfig,
   LoggerConfig,
   RedisConfig,
   RootConfig,
@@ -55,20 +55,17 @@ const loggerFactory: LoggerModuleAsyncParams = {
       pinoHttp: {
         name: 'grafanacloud-offers-worker',
         level: 'info',
-        transport:
-          process.env.NODE_ENV === 'production'
-            ? {
-                target: 'pino-loki',
-                options: {
-                  silenceErrors: false,
-                  host: config.host,
-                  basicAuth: {
-                    username: config.username,
-                    password: config.password,
-                  },
-                },
-              }
-            : { target: 'pino-pretty' },
+        transport: {
+          target: 'pino-loki',
+          options: {
+            silenceErrors: false,
+            host: config.host,
+            basicAuth: {
+              username: config.username,
+              password: config.password,
+            },
+          },
+        },
       },
     };
   },
@@ -76,8 +73,8 @@ const loggerFactory: LoggerModuleAsyncParams = {
 
 const foodsiClientFactory: ConfigurableModuleAsyncOptions<FoodsiClientOptions> =
   {
-    inject: [FoodsiClientConfig],
-    useFactory: (config: FoodsiClientConfig) => {
+    inject: [FoodsiConfig],
+    useFactory: (config: FoodsiConfig) => {
       return {
         auth: {
           email: config.email,
