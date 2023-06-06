@@ -4,7 +4,7 @@ import moize from 'moize';
 import { MODULE_OPTIONS_TOKEN } from '../foodsi-client.module-definition';
 import { FoodsiClientOptions } from '../foodsi-client-options.interface';
 
-const TOKEN_CACHE_EXPIRY = 60 * 60 * 1000; // 1 hour
+const TOKEN_CACHE_EXPIRY = 6 * 60 * 60 * 1000; // 6 hour
 
 @Injectable()
 export class AuthService {
@@ -27,6 +27,7 @@ export class AuthService {
 
   getAuthorizedHeaders = moize(this.signIn.bind(this), {
     maxAge: TOKEN_CACHE_EXPIRY,
+    isPromise: true,
   });
 
   private async signIn() {
