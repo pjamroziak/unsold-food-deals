@@ -11,6 +11,8 @@ import { CitySchema, IdSchema } from '@unsold-food-deals/schemas';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 
+const OFFER_CACHE_EXPIRY = 60 * 60 * 1000; // 1 hour
+
 @Processor('requested-scrap-by-city')
 export class RequestedScrapByCityConsumer extends WorkerHost {
   private readonly logger = new Logger(RequestedScrapByCityConsumer.name);
@@ -36,8 +38,8 @@ export class RequestedScrapByCityConsumer extends WorkerHost {
           removeOnComplete: true,
           removeOnFail: true,
         });
-        this.cacheManager.set(offer.id, offer);
       }
+      this.cacheManager.set(offer.id, offer, OFFER_CACHE_EXPIRY);
     }
   }
 
