@@ -59,9 +59,7 @@ export class CreatedOfferService {
   }
 
   parseOfferToMessagePayload(offer: Offer) {
-    return offer.stock === 1
-      ? this.createLastOfferMessage(offer)
-      : this.createOfferMessage(offer);
+    return this.createOfferMessage(offer);
   }
 
   private createOfferMessage(offer: Offer) {
@@ -87,10 +85,12 @@ export class CreatedOfferService {
   }
 
   private getAppearOfferVarietyText(count: number, offerName: string) {
-    if (count <= 4) {
+    if (count === 1) {
+      return `Pojawiła się *${count}* paczka w *${offerName}*`;
+    } else if (count <= 4) {
       return `Pojawiły się *${count}* paczki w *${offerName}*`;
+    } else {
+      return `Pojawiło się *${count}* paczek w *${offerName}*`;
     }
-
-    return `Pojawiło się *${count}* paczek w *${offerName}*`;
   }
 }
