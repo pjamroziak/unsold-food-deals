@@ -27,7 +27,6 @@ export class AuthService {
 
   getAuthorizedHeaders = moize(this.signIn.bind(this), {
     maxAge: TOKEN_CACHE_EXPIRY,
-    isPromise: true,
   });
 
   private async signIn() {
