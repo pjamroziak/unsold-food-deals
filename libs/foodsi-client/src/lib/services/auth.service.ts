@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import axios, { Axios } from 'axios';
+import axios, { Axios, AxiosError } from 'axios';
 import moize from 'moize';
 import { MODULE_OPTIONS_TOKEN } from '../foodsi-client.module-definition';
 import { FoodsiClientOptions } from '../foodsi-client-options.interface';
@@ -30,18 +30,25 @@ export class AuthService {
   });
 
   private async signIn() {
-    this.logger.log('refresh authorization token');
+    try {
+      this.logger.log('refresh authorization token');
 
-    const response = await this.http.post('api/v2/auth/sign_in', {
-      email: this.options.auth.email,
-      password: this.options.auth.password,
-    });
+      const response = await this.http.post('api/v2/auth/sign_in', {
+        email: this.options.auth.email,
+        password: this.options.auth.password,
+      });
 
-    const { headers } = response;
-    return {
-      'Access-Token': headers['access-token'],
-      Client: headers['client'],
-      Uid: headers['uid'],
-    };
+      const { headers } = response;
+      return {
+        'Access-Token': headers['access-token'],
+        Client: headers['client'],
+        Uid: headers['uid'],
+      };
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        this.logger.error({ ...error.response });
+        throw error;
+      }
+    }
   }
 }
