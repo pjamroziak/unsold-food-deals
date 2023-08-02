@@ -47,8 +47,8 @@ export class AuthService {
     } catch (error) {
       if (error instanceof AxiosError) {
         this.logger.error({ ...error.response });
-        throw error;
       }
+      throw error;
     }
   }
 }

@@ -31,16 +31,18 @@ export class RequestedScrapByCityConsumer extends WorkerHost {
     const city = IdSchema.merge(CitySchema).parse(job.data);
     const offers = await this.service.getOffers(city);
 
-    for (const offer of offers) {
-      const isExist = await this.cacheManager.get(offer.id);
-      if (isExist === null) {
-        await this.offersQueue.add('created-offer', offer, {
-          removeOnComplete: true,
-          removeOnFail: true,
-        });
-      }
-      this.cacheManager.set(offer.id, offer, OFFER_CACHE_EXPIRY);
-    }
+    await Promise.allSettled(
+      offers.map(async (offer) => {
+        const isExist = await this.cacheManager.get(offer.id);
+        if (isExist === null) {
+          await this.offersQueue.add('created-offer', offer, {
+            removeOnComplete: true,
+            removeOnFail: true,
+          });
+        }
+        await this.cacheManager.set(offer.id, offer, OFFER_CACHE_EXPIRY);
+      })
+    );
   }
 
   @OnWorkerEvent('active')
