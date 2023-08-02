@@ -47,7 +47,7 @@ export class CityService {
       cities = await this.cityRepository.findAll({
         fields: ['id', 'name', 'latitude', 'longitude', 'radiusInKm'],
       });
-      this.cacheManager.set('available-cities', cities, 36000);
+      this.cacheManager.set('available-cities', cities, 360);
     }
 
     if (cities.length === 0) {
