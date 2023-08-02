@@ -7,6 +7,7 @@ export const OfferSchema = z.object({
   stock: z.number(),
   oldPrice: z.number(),
   newPrice: z.number(),
+  weekDay: z.number().nullish(),
   openedAt: z.string(),
   closedAt: z.string(),
 });

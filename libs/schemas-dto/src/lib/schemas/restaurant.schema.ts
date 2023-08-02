@@ -9,6 +9,7 @@ export const RestaurantSchema = z.object({
   name: z.string(),
   package_day: z.object({
     collection_day: z.object({
+      week_day: z.number().nullish(),
       closed_at: z.string(),
       opened_at: z.string(),
     }),

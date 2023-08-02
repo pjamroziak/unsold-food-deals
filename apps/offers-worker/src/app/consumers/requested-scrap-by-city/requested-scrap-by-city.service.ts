@@ -29,6 +29,7 @@ export class RequestedScrapByCityService {
       stock: restaurant.package_day.meals_left ?? 0,
       oldPrice: Number(restaurant.meal.original_price),
       newPrice: Number(restaurant.meal.price),
+      weekDay: restaurant.package_day.collection_day.week_day,
       openedAt: this.parseDate(restaurant.package_day.collection_day.opened_at),
       closedAt: this.parseDate(restaurant.package_day.collection_day.closed_at),
     }));

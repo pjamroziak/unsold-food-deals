@@ -69,18 +69,12 @@ export class CreatedOfferService {
     const closedAt = DateTime.fromISO(offer.closedAt).toFormat(format);
 
     const offerText = this.getAppearOfferVarietyText(offer.stock, offer.name);
+    const weekDay = this.getWeekDayName(offer.weekDay);
 
     return `
 🥡 ${offerText}
 💸 *${offer.newPrice}* / ${offer.oldPrice} zł 
-⌛ ${openedAt}-${closedAt}
-`;
-  }
-
-  private createLastOfferMessage(offer: Offer) {
-    return `
-❗ *Ostatnia* paczka w *${offer.name}*
-💸 *${offer.newPrice}* / ${offer.oldPrice} zł 
+⌛ ${weekDay} ${openedAt}-${closedAt}
 `;
   }
 
@@ -91,6 +85,29 @@ export class CreatedOfferService {
       return `Pojawiły się *${count}* paczki w *${offerName}*`;
     } else {
       return `Pojawiło się *${count}* paczek w *${offerName}*`;
+    }
+  }
+
+  private getWeekDayName(weekDay?: number | null) {
+    if (!weekDay) return '';
+
+    switch (weekDay) {
+      case 1:
+        return 'poniedziałek';
+      case 2:
+        return 'wtorek';
+      case 3:
+        return 'środa';
+      case 4:
+        return 'czwartek';
+      case 5:
+        return 'piątek';
+      case 6:
+        return 'sobota';
+      case 7:
+        return 'niedziela';
+      default:
+        return '';
     }
   }
 }
