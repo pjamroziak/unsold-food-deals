@@ -1,7 +1,6 @@
 import { createZodDto } from 'nestjs-zod';
 import {
   CitySchema,
-  IdSchema,
   OptionalCitySchema,
   OptionalIdSchema,
   PaginationRequestSchema,
