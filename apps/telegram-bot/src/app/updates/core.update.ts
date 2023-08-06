@@ -5,7 +5,7 @@ import { Context } from 'telegraf';
 import { SceneContext } from 'telegraf/typings/scenes';
 import { I18nContext, SessionContext } from '../types';
 import { ClientType } from '@unsold-food-deals/schemas';
-import { DefaultParseMode } from '../constants';
+import { BotWizard, DefaultParseMode } from '../constants';
 import { UnexpectedExceptionFilter } from '../filters/unexpected-exception.filter';
 
 type CoreContext = Context & SceneContext & I18nContext & SessionContext;
@@ -30,16 +30,27 @@ export class CoreUpdate {
   }
 
   @Command('cities')
-  async displayCities(@Ctx() ctx: CoreContext) {
+  async cities(@Ctx() ctx: CoreContext) {
     const response = await this.apiClient.city.find();
     const cities = response.results.map((city) => city.name).join(', \n');
 
     await ctx.reply(ctx.t('city-list', { cities }), DefaultParseMode);
   }
 
-  @Command('setup')
-  async setup(@Ctx() ctx: CoreContext) {
-    await ctx.scene.enter('setup');
+  @Command('setcity')
+  async setCity(@Ctx() ctx: CoreContext) {
+    await ctx.scene.enter(BotWizard.SET_CITY);
+  }
+
+  @Command('setfilters')
+  async setFilters(@Ctx() ctx: CoreContext) {
+    await this.refreshSession(ctx);
+
+    if (!ctx.session.clientId) {
+      await ctx.reply(ctx.t('missing-session-error'), DefaultParseMode);
+    } else {
+      await ctx.scene.enter(BotWizard.SET_FITLERS);
+    }
   }
 
   @Command('help')
@@ -49,9 +60,13 @@ export class CoreUpdate {
 
   private async refreshSession(ctx: CoreContext) {
     if (!ctx.session.clientId) {
-      ctx.session.clientId = await this.getClientId(
-        String(ctx.message.from.id)
-      );
+      try {
+        ctx.session.clientId = await this.getClientId(
+          String(ctx.message.from.id)
+        );
+      } catch (error) {
+        ctx.session.clientId = undefined;
+      }
     }
   }
 

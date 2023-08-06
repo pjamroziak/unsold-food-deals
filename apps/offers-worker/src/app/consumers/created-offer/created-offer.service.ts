@@ -15,7 +15,9 @@ export class CreatedOfferService {
     private readonly apiClient: ApiClient
   ) {}
 
-  async sendMessagesToClients(cityId: string, payload: string) {
+  async sendMessagesToClients(cityId: string, offer: Offer) {
+    const payload = this.parseOfferToMessagePayload(offer);
+
     const firstResult = await this.apiClient.client.find({
       city: cityId,
       enabled: true,
@@ -37,11 +39,20 @@ export class CreatedOfferService {
 
       const clients = response.results;
 
-      const jobs = clients.map(({ chatId }) => ({
-        name: 'send-message',
-        data: { chatId, payload },
-        opts: { removeOnComplete: true, removeOnFail: true },
-      }));
+      const jobs = clients
+        .filter(
+          (client) =>
+            client.filters.length === 0 ||
+            client.filters.some(
+              (filter) =>
+                offer.name.toLowerCase().search(filter.toLowerCase()) !== -1
+            )
+        )
+        .map(({ chatId }) => ({
+          name: 'send-message',
+          data: { chatId, payload },
+          opts: { removeOnComplete: true, removeOnFail: true },
+        }));
 
       await this.queue.addBulk(jobs);
 
@@ -50,6 +61,7 @@ export class CreatedOfferService {
           clients: clients.map((client) => ({
             id: client.id,
           })),
+          payload,
         },
         'sent message to clients'
       );
@@ -74,7 +86,7 @@ export class CreatedOfferService {
     return `
 🥡 ${offerText}
 💸 *${offer.newPrice}* / ${offer.oldPrice} zł 
-⌛ ${weekDay} ${openedAt}-${closedAt}
+⌛ *${weekDay}* między ${openedAt}-${closedAt}
 `;
   }
 
@@ -88,24 +100,37 @@ export class CreatedOfferService {
     }
   }
 
-  private getWeekDayName(weekDay?: number | null) {
-    if (!weekDay) return '';
+  private getWeekDayName(weekday?: number | null) {
+    if (!weekday) return '';
 
-    switch (weekDay) {
+    const nowWeekday = DateTime.now().weekday;
+
+    const today = nowWeekday === weekday;
+    if (today) {
+      return 'Dziś';
+    }
+
+    const tomorrow =
+      weekday - nowWeekday === 1 || (weekday === 1 && nowWeekday === 7);
+    if (tomorrow) {
+      return 'Jutro';
+    }
+
+    switch (weekday) {
       case 1:
-        return 'poniedziałek';
+        return 'Poniedziałek';
       case 2:
-        return 'wtorek';
+        return 'Wtorek';
       case 3:
-        return 'środa';
+        return 'Środa';
       case 4:
-        return 'czwartek';
+        return 'Czwartek';
       case 5:
-        return 'piątek';
+        return 'Piątek';
       case 6:
-        return 'sobota';
+        return 'Sobota';
       case 7:
-        return 'niedziela';
+        return 'Niedziela';
       default:
         return '';
     }

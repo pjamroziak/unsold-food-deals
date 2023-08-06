@@ -6,7 +6,7 @@ import { I18n } from 'telegraf-fluent';
 import { TelegrafModule } from 'nestjs-telegraf';
 import { ApiClientModule } from '@unsold-food-deals/api-client';
 import { CoreUpdate } from './updates/core.update';
-import { SetupWizard } from './wizards/setup.wizard';
+import { SetCityWizard } from './wizards/setcity.wizard';
 import { BullModule } from '@nestjs/bullmq';
 import { SendMessageConsumerModule } from './consumers/send-message/send-message.module';
 import {
@@ -18,6 +18,7 @@ import {
 } from './app.config';
 import { TypedConfigModule, dotenvLoader } from 'nest-typed-config';
 import { LoggerModule, LoggerModuleAsyncParams } from 'nestjs-pino';
+import { SetFiltersWizard } from './wizards/setfilters.wizard';
 
 const telegrafFactory = {
   inject: [TelegramConfig, RedisConfig],
@@ -95,6 +96,6 @@ const loggerFactory: LoggerModuleAsyncParams = {
     ApiClientModule.registerAsync(apiClientFactory),
     SendMessageConsumerModule,
   ],
-  providers: [CoreUpdate, SetupWizard],
+  providers: [CoreUpdate, SetCityWizard, SetFiltersWizard],
 })
 export class AppModule {}

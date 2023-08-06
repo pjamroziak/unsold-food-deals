@@ -1,3 +1,4 @@
 export const BotWizard = {
-  SETUP: 'setup',
+  SET_CITY: 'setcity',
+  SET_FITLERS: 'setfilters',
 };

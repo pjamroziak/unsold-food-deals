@@ -16,9 +16,8 @@ export class CreatedOfferConsumer extends WorkerHost {
 
   async process(job: Job) {
     const offer = OfferSchema.parse(job.data);
-    const payload = this.service.parseOfferToMessagePayload(offer);
 
-    await this.service.sendMessagesToClients(offer.cityId, payload);
+    await this.service.sendMessagesToClients(offer.cityId, offer);
   }
 
   @OnWorkerEvent('active')

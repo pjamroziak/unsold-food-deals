@@ -1,4 +1,4 @@
-import { Entity, Enum, ManyToOne, Property } from '@mikro-orm/core';
+import { ArrayType, Entity, Enum, ManyToOne, Property } from '@mikro-orm/core';
 import { BaseEntity } from './base-entity';
 import { User } from './user.entity';
 import { ClientType } from '@unsold-food-deals/schemas';
@@ -14,6 +14,9 @@ export class Client extends BaseEntity {
 
   @Property()
   enabled!: boolean;
+
+  @Property({ type: ArrayType, default: [] })
+  filters: Array<string> = [];
 
   @ManyToOne({
     entity: () => City,
