@@ -2,7 +2,6 @@ import { Injectable, UseFilters } from '@nestjs/common';
 import {
   Command,
   Ctx,
-  Hears,
   On,
   SceneEnter,
   Wizard,
