@@ -118,7 +118,7 @@ export class CityService {
     cityCords: CordinatesDto
   ) {
     const isLatitudeEqual = userCords.latitude === cityCords.latitude;
-    const isLongitudeEqual = cityCords.longitude === cityCords.longitude;
+    const isLongitudeEqual = userCords.longitude === cityCords.longitude;
     const isCordinatesEqual = isLatitudeEqual && isLongitudeEqual;
 
     if (isCordinatesEqual) {
