@@ -4,6 +4,7 @@ import { Context } from 'telegraf';
 import { I18nContext } from '../types';
 import { DefaultParseMode } from '../constants';
 import { isAxiosError } from 'axios';
+import { SceneContext } from 'telegraf/typings/scenes';
 
 @Catch()
 export class UnexpectedExceptionFilter implements ExceptionFilter {
@@ -11,7 +12,7 @@ export class UnexpectedExceptionFilter implements ExceptionFilter {
 
   async catch(exception: unknown, host: ArgumentsHost) {
     const telegrafHost = TelegrafArgumentsHost.create(host);
-    const ctx = telegrafHost.getContext<Context & I18nContext>();
+    const ctx = telegrafHost.getContext<Context & I18nContext & SceneContext>();
 
     if (isAxiosError(exception)) {
       this.logger.error(
@@ -29,5 +30,9 @@ export class UnexpectedExceptionFilter implements ExceptionFilter {
     }
 
     await ctx.reply(ctx.t('unexpected-error'), DefaultParseMode);
+
+    if (ctx.scene.leave) {
+      await ctx.scene.leave();
+    }
   }
 }

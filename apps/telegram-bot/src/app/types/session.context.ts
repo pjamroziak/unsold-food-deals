@@ -1,7 +1,7 @@
 export type SessionContext = {
   session: {
     clientId?: string;
-    setup?: {
+    setcity?: {
       cityId?: string;
     };
   };

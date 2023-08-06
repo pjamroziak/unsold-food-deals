@@ -23,27 +23,27 @@ type WizardContext = Context &
   Scenes.WizardContext;
 
 @Injectable()
-@Wizard(BotWizard.SETUP)
+@Wizard(BotWizard.SET_CITY)
 @UseFilters(UnexpectedExceptionFilter)
-export class SetupWizard {
+export class SetCityWizard {
   constructor(private readonly apiClient: ApiClient) {}
 
   @SceneEnter()
   async start(@Ctx() ctx: WizardContext) {
     await ctx.reply(
-      ctx.t('setup-welcome'),
+      ctx.t('setcity-welcome'),
       Markup.keyboard([
-        Markup.button.locationRequest(ctx.t('setup-send-location-btn')),
+        Markup.button.locationRequest(ctx.t('setcity-send-location-btn')),
       ]).resize()
     );
   }
 
   @WizardStep(1)
   @Command('cancel')
-  async cancelSetup(@Ctx() ctx: WizardContext) {
-    await ctx.reply(ctx.t('setup-cancel'), Markup.removeKeyboard());
-    ctx.session.setup = undefined;
-    ctx.scene.leave();
+  async cancelsetcity(@Ctx() ctx: WizardContext) {
+    await ctx.reply(ctx.t('setcity-cancel'), Markup.removeKeyboard());
+    ctx.session.setcity = undefined;
+    await ctx.scene.leave();
   }
 
   @WizardStep(1)
@@ -55,17 +55,17 @@ export class SetupWizard {
     });
 
     if (!city) {
-      ctx.reply(ctx.t('setup-location-not-found'), Markup.removeKeyboard());
+      ctx.reply(ctx.t('setcity-location-not-found'), Markup.removeKeyboard());
       await ctx.scene.leave();
       return;
     }
 
-    ctx.session.setup = {
+    ctx.session.setcity = {
       cityId: city.id,
     };
 
     await ctx.reply(
-      ctx.t('setup-location-found', { city: city.name }),
+      ctx.t('setcity-location-found', { city: city.name }),
       Markup.inlineKeyboard([
         Markup.button.callback('👍', 'CONFIRM_CITY'),
         Markup.button.callback('👎', 'REJECT_CITY'),
@@ -79,9 +79,9 @@ export class SetupWizard {
   @Action('REJECT_CITY')
   async rejectCity(@Ctx() ctx: WizardContext) {
     await ctx.reply(
-      ctx.t('setup-location-again'),
+      ctx.t('setcity-location-again'),
       Markup.keyboard([
-        Markup.button.locationRequest(ctx.t('setup-send-location-btn')),
+        Markup.button.locationRequest(ctx.t('setcity-send-location-btn')),
       ]).resize()
     );
 
@@ -94,24 +94,35 @@ export class SetupWizard {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-ignore
     const chatId = ctx.update.callback_query.from.id.toString();
+    await this.createUserAndClient(chatId, ctx.session.setcity.cityId);
 
+    await ctx.reply(ctx.t('setcity-finish'), Markup.removeKeyboard());
+    await ctx.scene.leave();
+  }
+
+  private async getClient(chatId: string) {
     const foundClients = await this.apiClient.client.find({
       chatId,
     });
 
-    if (foundClients.count === 0) {
+    return foundClients.count === 1 ? foundClients.results[0] : null;
+  }
+
+  private async createUserAndClient(chatId: string, cityId: string) {
+    const client = await this.getClient(chatId);
+
+    if (!client) {
       const user = await this.apiClient.user.create({});
       await this.apiClient.client.create({
         chatId,
-        city: ctx.session.setup.cityId,
+        city: cityId,
         user: user.id,
         type: ClientType.TELEGRAM,
         enabled: true,
+        filters: [],
       });
     } else {
-      const client = foundClients.results[0];
       let userId = client.user;
-
       if (!userId) {
         const user = await this.apiClient.user.create({});
         userId = user.id;
@@ -120,11 +131,8 @@ export class SetupWizard {
       await this.apiClient.client.update(client.id, {
         user: userId,
         enabled: true,
-        city: ctx.session.setup.cityId,
+        city: cityId,
       });
     }
-
-    ctx.reply(ctx.t('setup-finish'), Markup.removeKeyboard());
-    await ctx.scene.leave();
   }
 }

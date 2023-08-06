@@ -11,8 +11,6 @@ import { CitySchema, IdSchema } from '@unsold-food-deals/schemas';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 
-const OFFER_CACHE_EXPIRY = 360; // 3 min
-
 @Processor('requested-scrap-by-city')
 export class RequestedScrapByCityConsumer extends WorkerHost {
   private readonly logger = new Logger(RequestedScrapByCityConsumer.name);
@@ -31,18 +29,26 @@ export class RequestedScrapByCityConsumer extends WorkerHost {
     const city = IdSchema.merge(CitySchema).parse(job.data);
     const offers = await this.service.getOffers(city);
 
-    await Promise.allSettled(
-      offers.map(async (offer) => {
-        const isExist = await this.cacheManager.get(offer.id);
-        if (isExist === null) {
-          await this.offersQueue.add('created-offer', offer, {
-            removeOnComplete: true,
-            removeOnFail: true,
-          });
-        }
-        await this.cacheManager.set(offer.id, offer, OFFER_CACHE_EXPIRY);
-      })
-    );
+    const promises = offers.map(async (offer) => {
+      const isExist = await this.cacheManager.get(offer.id);
+      if (isExist === null) {
+        await this.offersQueue.add('created-offer', offer, {
+          removeOnComplete: true,
+          removeOnFail: true,
+        });
+      }
+      await this.cacheManager.set(offer.id, offer);
+    });
+
+    const results = await Promise.allSettled(promises);
+    results
+      .filter((result) => result.status === 'rejected')
+      .forEach((result) =>
+        this.logger.error(
+          (result as PromiseRejectedResult).reason,
+          'failed processing offer'
+        )
+      );
   }
 
   @OnWorkerEvent('active')

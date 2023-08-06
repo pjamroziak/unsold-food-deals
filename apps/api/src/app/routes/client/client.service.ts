@@ -39,8 +39,10 @@ export class ClientService {
   }
 
   async create(payload: CreateClientDto) {
-    await this.throwErrorIfUserNotExist(payload.user);
-    await this.throwErrorIfCityNotExist(payload.city);
+    await Promise.all([
+      this.throwErrorIfUserNotExist(payload.user),
+      this.throwErrorIfCityNotExist(payload.city),
+    ]);
 
     const newClient = this.clientRepository.create(payload);
     await this.clientRepository.persistAndFlush(newClient);
