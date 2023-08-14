@@ -1,7 +1,7 @@
 import { InjectQueue } from '@nestjs/bullmq';
 import { Injectable, Logger } from '@nestjs/common';
 import { ApiClient } from '@unsold-food-deals/api-client';
-import { Offer } from '@unsold-food-deals/schemas';
+import { Offer, SupportedApp } from '@unsold-food-deals/schemas';
 import { Queue } from 'bullmq';
 import { DateTime } from 'luxon';
 
@@ -51,7 +51,10 @@ export class CreatedOfferService {
         .map(({ chatId }) => ({
           name: 'send-message',
           data: { chatId, payload },
-          opts: { removeOnComplete: true, removeOnFail: true },
+          opts: {
+            removeOnComplete: true,
+            removeOnFail: true,
+          },
         }));
 
       await this.queue.addBulk(jobs);
@@ -81,13 +84,24 @@ export class CreatedOfferService {
     const closedAt = DateTime.fromISO(offer.closedAt).toFormat(format);
 
     const offerText = this.getAppearOfferVarietyText(offer.stock, offer.name);
-    const weekDay = this.getWeekDayName(offer.weekDay);
+    const weekDay = this.getWeekDayName(offer.openedAt);
+    const applicationName = this.getApplicationName(offer.app);
 
     return `
 🥡 ${offerText}
 💸 *${offer.newPrice}* / ${offer.oldPrice} zł 
-⌛ *${weekDay}* między ${openedAt}-${closedAt}
+⌛ ${weekDay} między ${openedAt}-${closedAt}
+📲 Aplikacja ${applicationName}
 `;
+  }
+
+  private getApplicationName(app: SupportedApp) {
+    switch (app) {
+      case SupportedApp.Foodsi:
+        return 'Foodsi';
+      case SupportedApp.TooGoodToGo:
+        return 'TooGoodToGo';
+    }
   }
 
   private getAppearOfferVarietyText(count: number, offerName: string) {
@@ -100,10 +114,9 @@ export class CreatedOfferService {
     }
   }
 
-  private getWeekDayName(weekday?: number | null) {
-    if (!weekday) return '';
-
+  private getWeekDayName(date: string) {
     const nowWeekday = DateTime.now().weekday;
+    const weekday = DateTime.fromISO(date).weekday;
 
     const today = nowWeekday === weekday;
     if (today) {
