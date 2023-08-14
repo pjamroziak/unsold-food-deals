@@ -93,7 +93,7 @@ const loggerFactory: LoggerModuleAsyncParams = {
     LoggerModule.forRootAsync(loggerFactory),
     TelegrafModule.forRootAsync(telegrafFactory),
     BullModule.forRootAsync(bullmqFactory),
-    ApiClientModule.registerAsync(apiClientFactory),
+    ApiClientModule.forRootAsync(apiClientFactory),
     SendMessageConsumerModule,
   ],
   providers: [CoreUpdate, SetCityWizard, SetFiltersWizard],
