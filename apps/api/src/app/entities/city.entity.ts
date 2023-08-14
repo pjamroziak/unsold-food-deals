@@ -1,4 +1,5 @@
 import {
+  ArrayType,
   Cascade,
   Collection,
   Entity,
@@ -8,6 +9,7 @@ import {
 } from '@mikro-orm/core';
 import { BaseEntity } from './base-entity';
 import { Client } from './client.entity';
+import { SupportedApp } from '@unsold-food-deals/schemas';
 
 @Entity()
 @Index()
@@ -23,6 +25,9 @@ export class City extends BaseEntity {
 
   @Property({ type: 'integer' })
   radiusInKm!: number;
+
+  @Property({ type: ArrayType, default: [] })
+  supportedApps: SupportedApp[];
 
   @OneToMany({
     entity: () => Client,
