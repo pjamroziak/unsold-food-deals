@@ -7,9 +7,10 @@ import {
 import { Inject, Logger } from '@nestjs/common';
 import { Job, Queue } from 'bullmq';
 import { RequestedScrapByCityService } from './requested-scrap-by-city.service';
-import { CitySchema, IdSchema } from '@unsold-food-deals/schemas';
+import { IdSchema } from '@unsold-food-deals/schemas';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
+import { ApiClient } from '@unsold-food-deals/api-client';
 
 @Processor('requested-scrap-by-city')
 export class RequestedScrapByCityConsumer extends WorkerHost {
@@ -20,13 +21,21 @@ export class RequestedScrapByCityConsumer extends WorkerHost {
     private readonly offersQueue: Queue,
     @Inject(CACHE_MANAGER)
     private readonly cacheManager: Cache,
-    private readonly service: RequestedScrapByCityService
+    private readonly service: RequestedScrapByCityService,
+    private readonly apiClient: ApiClient
   ) {
     super();
   }
 
   async process(job: Job) {
-    const city = IdSchema.merge(CitySchema).parse(job.data);
+    const { id } = IdSchema.parse(job.data);
+    const response = await this.apiClient.city.find({ id });
+
+    if (response.count === 0) {
+      throw new Error(`Cannot find City by id - ${id}`);
+    }
+
+    const city = response.results[0];
     const offers = await this.service.getOffers(city);
 
     const promises = offers.map(async (offer) => {
@@ -51,11 +60,6 @@ export class RequestedScrapByCityConsumer extends WorkerHost {
       );
   }
 
-  @OnWorkerEvent('active')
-  onActive() {
-    this.logger.log('started processing "requested-scrap-by-city" event');
-  }
-
   @OnWorkerEvent('failed')
   onFailed(job, error) {
     this.logger.error(
@@ -67,10 +71,5 @@ export class RequestedScrapByCityConsumer extends WorkerHost {
   @OnWorkerEvent('error')
   onError(job, error) {
     this.logger.error({ error });
-  }
-
-  @OnWorkerEvent('completed')
-  onCompleted() {
-    this.logger.log('finished processing "requested-scrap-by-city" event');
   }
 }

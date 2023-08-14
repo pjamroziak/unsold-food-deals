@@ -3,10 +3,12 @@ import * as Bull from 'bullmq';
 import { BullModule } from '@nestjs/bullmq';
 import { ConsumersModule } from './consumers/consumers.module';
 import {
+  ApiConfig,
   FoodsiConfig,
   LoggerConfig,
   RedisConfig,
   RootConfig,
+  TooGoodToGoConfig,
 } from './app.config';
 import { TypedConfigModule, dotenvLoader } from 'nest-typed-config';
 import {
@@ -20,6 +22,14 @@ import {
   FoodsiClientModule,
   FoodsiClientOptions,
 } from '@unsold-food-deals/foodsi-client';
+import {
+  TooGoToGoClientModule,
+  TooGoodToGoClientOptions,
+} from '@unsold-food-deals/tgtg-client';
+import {
+  ApiClientModule,
+  ApiClientOptions,
+} from '@unsold-food-deals/api-client';
 
 const bullmqFactory = {
   inject: [RedisConfig],
@@ -84,6 +94,29 @@ const foodsiClientFactory: ConfigurableModuleAsyncOptions<FoodsiClientOptions> =
     },
   };
 
+const tgtgClientFactory: ConfigurableModuleAsyncOptions<TooGoodToGoClientOptions> =
+  {
+    inject: [TooGoodToGoConfig],
+    useFactory: (config: TooGoodToGoConfig) => {
+      return {
+        auth: {
+          accessToken: config.accessToken,
+          refreshToken: config.refreshToken,
+          userId: config.userId,
+        },
+      };
+    },
+  };
+
+const apiClientFactory: ConfigurableModuleAsyncOptions<ApiClientOptions> = {
+  inject: [ApiConfig],
+  useFactory: (config: ApiConfig) => {
+    return {
+      baseUrl: config.url,
+    };
+  },
+};
+
 @Module({
   imports: [
     TypedConfigModule.forRoot({
@@ -96,6 +129,8 @@ const foodsiClientFactory: ConfigurableModuleAsyncOptions<FoodsiClientOptions> =
     BullModule.forRootAsync(bullmqFactory),
     CacheModule.registerAsync(redisFactory),
     FoodsiClientModule.forRootAsync(foodsiClientFactory),
+    TooGoToGoClientModule.forRootAsync(tgtgClientFactory),
+    ApiClientModule.forRootAsync(apiClientFactory),
     ConsumersModule,
   ],
 })

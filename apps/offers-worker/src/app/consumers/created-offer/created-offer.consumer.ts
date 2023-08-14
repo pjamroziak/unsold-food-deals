@@ -20,11 +20,6 @@ export class CreatedOfferConsumer extends WorkerHost {
     await this.service.sendMessagesToClients(offer.cityId, offer);
   }
 
-  @OnWorkerEvent('active')
-  onActive() {
-    this.logger.log('started processing "created-offer" job');
-  }
-
   @OnWorkerEvent('failed')
   onFailed(job, error) {
     this.logger.error({ error }, 'failed processing "created-offer" job');
@@ -33,10 +28,5 @@ export class CreatedOfferConsumer extends WorkerHost {
   @OnWorkerEvent('error')
   onError(job, error) {
     this.logger.error({ error });
-  }
-
-  @OnWorkerEvent('completed')
-  onCompleted() {
-    this.logger.log('finished processing "created-offer" job');
   }
 }

@@ -37,6 +37,15 @@ export class FoodsiConfig {
   public readonly password: string;
 }
 
+export class TooGoodToGoConfig {
+  @IsString()
+  public readonly accessToken: string;
+  @IsString()
+  public readonly refreshToken: string;
+  @IsString()
+  public readonly userId: string;
+}
+
 export class RootConfig {
   @Type(() => RedisConfig)
   @ValidateNested()
@@ -53,4 +62,8 @@ export class RootConfig {
   @Type(() => FoodsiConfig)
   @ValidateNested()
   public readonly foodsi: FoodsiConfig;
+
+  @Type(() => TooGoodToGoConfig)
+  @ValidateNested()
+  public readonly tgtg: TooGoodToGoConfig;
 }
