@@ -18,9 +18,7 @@ type SendMessageTelegrafError = {
   };
 };
 
-@Processor('send-message', {
-  concurrency: 10,
-})
+@Processor('send-message')
 export class SendMessageConsumer extends WorkerHost {
   private readonly logger = new Logger(SendMessageConsumer.name);
 

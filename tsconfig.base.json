@@ -22,6 +22,9 @@
       "@unsold-food-deals/foodsi-client": [
         "libs/foodsi-client/src/index.ts"
       ],
+      "@unsold-food-deals/tgtg-client": [
+        "libs/tgtg-client/src/index.ts"
+      ],
       "@unsold-food-deals/schemas": [
         "libs/schemas-dto/src/index.ts"
       ]
