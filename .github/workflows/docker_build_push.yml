@@ -1,0 +1,114 @@
+name: 'Build & Push'
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  get_with_predefined_action:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+      pull-requests: read
+
+    steps:
+      # Way is recommended by the Internet
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Get changed files with predefined action
+        id: changed-files
+        uses: tj-actions/changed-files@v37
+  
+      - name: List all changed files
+        run: |
+          echo '# FILES with tj-actions/changed-files' >> "${GITHUB_STEP_SUMMARY}"
+          echo '' >> "${GITHUB_STEP_SUMMARY}"
+          echo '```' >> "${GITHUB_STEP_SUMMARY}"
+
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            echo "$file was changed" >> "${GITHUB_STEP_SUMMARY}"
+          done
+
+          echo '```' >> "${GITHUB_STEP_SUMMARY}"
+
+  get_manually:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+      pull-requests: read
+    outputs:
+      IMAGES_TO_BUILD: ${{ steps.set_images.outputs.IMAGES_TO_BUILD }}
+    steps:
+      # Dirty way (Personally I like it)
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Get changed files manually
+        run: |
+          files_list="$(git diff --name-only ${{ github.event.before }} HEAD | xargs)"
+          echo '# Files with git command' >> "${GITHUB_STEP_SUMMARY}"
+          echo '' >> "${GITHUB_STEP_SUMMARY}"
+          echo '```' >> "${GITHUB_STEP_SUMMARY}"
+
+          for file in ${files_list}; do
+            echo "$file was changed" >> "${GITHUB_STEP_SUMMARY}"
+          done
+
+          echo '```' >> "${GITHUB_STEP_SUMMARY}"
+
+          # save files into variable
+          printf 'THE_FILES=%s\n' "${files_list}" >> "${GITHUB_ENV}"
+
+      # Since output of tj-actions/changed-files and 
+      - name: Get docker image names
+        # I'm familiar with python so will use it to parse file names
+        # be careful if you have spaces into file names
+        shell: python
+        env:
+          PROJECT_IMAGE_MAP: '{"apps/api": "pjamroziak/api", "apps/offers-worker": "pjamroziak/offers-worker", "apps/scheduler": "pjamroziak/scheduler", "apps/telegram-bot": "pjamroziak/telegram-bot"}'
+        run: |
+          from os import environ
+          import json
+          
+          # split files string into list. Divide by spaces
+          files = environ.get("THE_FILES").split(' ')
+          proj_image_map = json.loads(environ.get("PROJECT_IMAGE_MAP"))
+
+          images = []
+
+          # check if proj1, proj2, etc is a part of changed file path
+          for file in files:
+            for k, v in proj_image_map.items():
+              if k in file:
+                if v not in images:
+                  images.append(v)
+
+          # save retreived images as json array
+          with open(environ.get("GITHUB_ENV"), 'a') as f:
+            f.write('IMAGES_TO_BUILD=' + json.dumps(images) + '\n')
+      
+      - name: Set image names as output for matrix
+        id: set_images
+        run: |
+          echo "IMAGES_TO_BUILD=${IMAGES_TO_BUILD}" >> $GITHUB_OUTPUT
+
+  print_image_names_with_matrix:
+    name: "Build image: ${{ matrix.image }}"
+    runs-on: ubuntu-latest
+    needs: get_manually
+    strategy:
+      matrix:
+        image: ${{ fromJson( needs.get_manually.outputs.IMAGES_TO_BUILD ) }}
+
+    steps:
+      - name: Print image name from matrix
+        run: |
+          echo "${{ matrix.image }}"
