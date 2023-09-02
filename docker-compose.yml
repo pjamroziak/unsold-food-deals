@@ -42,13 +42,13 @@ services:
       logger__host: test
       logger__username: test
       logger__password: test
-  telegram-bot:
-    image: telegram-bot
+  bots:
+    image: bots
     environment:
       redis__host: redis
       redis__port: 6379
       redis__ttl: 86400
-      telegram__token: 
+      telegram__token:
       api__url: http://api:3000
       logger__host: test
       logger__username: test
