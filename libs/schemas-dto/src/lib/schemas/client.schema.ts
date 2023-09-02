@@ -4,6 +4,7 @@ import { IdSchema } from './id.schema';
 
 export enum ClientType {
   TELEGRAM = 'telegram',
+  DISCORD_COMMUNITY_CHANNEL = 'discord-community-channel',
 }
 
 export const ClientSchema = z.object({

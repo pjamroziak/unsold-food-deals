@@ -1,10 +1,41 @@
 import { Module } from '@nestjs/common';
 import { ApiClientModule } from '@unsold-food-deals/api-client';
 import { BullModule } from '@nestjs/bullmq';
-import { ApiConfig, LoggerConfig, RedisConfig, RootConfig } from './app.config';
+import {
+  ApiConfig,
+  DiscordConfig,
+  LoggerConfig,
+  RedisConfig,
+  RootConfig,
+  TelegramConfig,
+} from './app.config';
 import { TypedConfigModule, dotenvLoader } from 'nest-typed-config';
 import { LoggerModule, LoggerModuleAsyncParams } from 'nestjs-pino';
 import { TelegramBotModule } from './telegram/telegram.module';
+import { DiscordBotModule } from './discord/discord.module';
+import { DiscordModuleAsyncOptions, DiscordModule } from '@discord-nestjs/core';
+import { GatewayIntentBits } from 'discord.js';
+import { Redis } from '@telegraf/session/redis';
+import { TelegrafModule } from 'nestjs-telegraf';
+import path from 'path';
+import { session } from 'telegraf';
+import { I18n } from 'telegraf-fluent';
+
+const getTransport = (config: LoggerConfig) => {
+  return process.env.NODE_ENV !== 'production'
+    ? { target: 'pino-pretty' }
+    : {
+        target: 'pino-loki',
+        options: {
+          silenceErrors: false,
+          host: config.host,
+          basicAuth: {
+            username: config.username,
+            password: config.password,
+          },
+        },
+      };
+};
 
 const apiClientFactory = {
   inject: [ApiConfig],
@@ -34,20 +65,39 @@ const loggerFactory: LoggerModuleAsyncParams = {
       pinoHttp: {
         name: 'grafanacloud-telegram-bot',
         level: 'info',
-        transport: {
-          target: 'pino-loki',
-          options: {
-            silenceErrors: false,
-            host: config.host,
-            basicAuth: {
-              username: config.username,
-              password: config.password,
-            },
-          },
-        },
+        transport: getTransport(config),
       },
     };
   },
+};
+
+const discordFactory: DiscordModuleAsyncOptions = {
+  inject: [DiscordConfig],
+  useFactory: (config: DiscordConfig) => ({
+    token: config.token,
+    discordClientOptions: {
+      intents: [GatewayIntentBits.Guilds],
+    },
+    autoLogin: true,
+  }),
+};
+
+const telegrafFactory = {
+  inject: [TelegramConfig, RedisConfig],
+  useFactory: (telegramConfig: TelegramConfig, redisConfig: RedisConfig) => ({
+    token: telegramConfig.token,
+    middlewares: [
+      new I18n({
+        locales: 'pl',
+        directory: path.resolve(__dirname, 'assets'),
+      }).middleware(),
+      session({
+        store: Redis<object>({
+          url: `redis://${redisConfig.host}:${redisConfig.port}`,
+        }),
+      }),
+    ],
+  }),
 };
 
 @Module({
@@ -61,7 +111,11 @@ const loggerFactory: LoggerModuleAsyncParams = {
     LoggerModule.forRootAsync(loggerFactory),
     BullModule.forRootAsync(bullmqFactory),
     ApiClientModule.forRootAsync(apiClientFactory),
-    TelegramBotModule,
+    DiscordModule.forRootAsync(discordFactory),
+    // TelegrafModule.forRootAsync(telegrafFactory),
+
+    // TelegramBotModule,
+    DiscordBotModule,
   ],
 })
 export class AppModule {}
