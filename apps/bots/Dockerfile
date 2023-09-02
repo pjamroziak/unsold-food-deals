@@ -19,7 +19,7 @@ FROM base AS deploy
 WORKDIR /app
 
 COPY --from=dependencies /app/node_modules ./node_modules
-COPY ./dist/apps/telegram-bot .
+COPY ./dist/apps/bots .
 
 ENTRYPOINT ["/sbin/tini", "--"]
 CMD [ "node", "main.js"]
