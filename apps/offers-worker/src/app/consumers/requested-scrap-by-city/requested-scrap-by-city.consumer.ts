@@ -17,7 +17,7 @@ export class RequestedScrapByCityConsumer extends WorkerHost {
   private readonly logger = new Logger(RequestedScrapByCityConsumer.name);
 
   constructor(
-    @InjectQueue('created-offer')
+    @InjectQueue('send-message')
     private readonly offersQueue: Queue,
     @Inject(CACHE_MANAGER)
     private readonly cacheManager: Cache,
@@ -41,7 +41,7 @@ export class RequestedScrapByCityConsumer extends WorkerHost {
     const promises = offers.map(async (offer) => {
       const isExist = await this.cacheManager.get(offer.id);
       if (isExist === null) {
-        await this.offersQueue.add('created-offer', offer, {
+        await this.offersQueue.add('send-message', offer, {
           removeOnComplete: true,
           removeOnFail: true,
         });

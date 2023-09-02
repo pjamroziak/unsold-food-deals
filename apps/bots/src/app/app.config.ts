@@ -21,6 +21,11 @@ export class TelegramConfig {
   public readonly token: string;
 }
 
+export class DiscordConfig {
+  @IsString()
+  public readonly token: string;
+}
+
 export class ApiConfig {
   @IsString()
   public readonly url: string;
@@ -43,6 +48,10 @@ export class RootConfig {
   @Type(() => TelegramConfig)
   @ValidateNested()
   public readonly telegram: TelegramConfig;
+
+  @Type(() => DiscordConfig)
+  @ValidateNested()
+  public readonly discord: DiscordConfig;
 
   @Type(() => ApiConfig)
   @ValidateNested()

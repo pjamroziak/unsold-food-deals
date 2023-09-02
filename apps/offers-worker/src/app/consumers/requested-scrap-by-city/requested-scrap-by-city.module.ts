@@ -10,7 +10,7 @@ import { strategies } from './strategies';
       name: 'requested-scrap-by-city',
     }),
     BullModule.registerQueue({
-      name: 'created-offer',
+      name: 'send-message',
     }),
   ],
   providers: [
