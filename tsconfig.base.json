@@ -14,6 +14,7 @@
     ],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
+    "useDefineForClassFields": true,
     "baseUrl": ".",
     "paths": {
       "@unsold-food-deals/api-client": [
@@ -27,6 +28,9 @@
       ],
       "@unsold-food-deals/schemas": [
         "libs/schemas-dto/src/index.ts"
+      ],
+      "@unsold-food-deals/offer-message-parser": [
+        "libs/offer-message-parser/src/index.ts"
       ]
     }
   },
