@@ -22,7 +22,7 @@ function getAppearOfferVarietyText(count: number, offerName: string) {
 
 function getWeekDayName(date: string) {
   const nowWeekday = DateTime.now().weekday;
-  const weekday = DateTime.fromISO(date).weekday;
+  const weekday = DateTime.fromISO(date, { zone: 'Europe/Warsaw' }).weekday;
 
   const today = nowWeekday === weekday;
   if (today) {
@@ -58,8 +58,12 @@ function getWeekDayName(date: string) {
 export function parseOfferToMessage(offer: Offer): string {
   const format = 'HH:mm';
 
-  const openedAt = DateTime.fromISO(offer.openedAt).toFormat(format);
-  const closedAt = DateTime.fromISO(offer.closedAt).toFormat(format);
+  const openedAt = DateTime.fromISO(offer.openedAt, {
+    zone: 'Europe/Warsaw',
+  }).toFormat(format);
+  const closedAt = DateTime.fromISO(offer.closedAt, {
+    zone: 'Europe/Warsaw',
+  }).toFormat(format);
 
   const offerText = getAppearOfferVarietyText(offer.stock, offer.name);
   const weekDay = getWeekDayName(offer.openedAt);
