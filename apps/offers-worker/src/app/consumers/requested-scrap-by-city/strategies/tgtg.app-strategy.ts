@@ -29,7 +29,7 @@ export class TooGoodToGoAppStrategy implements IAppStrategy {
       cityId: city.id,
       app: SupportedApp.TooGoodToGo,
       name: item.store.store_name,
-      stock: item.items_available,
+      stock: item.items_available ?? 1,
       oldPrice: this.getPrice(
         item.item.item_value.minor_units,
         item.item.item_value.decimals
