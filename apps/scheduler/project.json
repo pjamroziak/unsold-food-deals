@@ -60,7 +60,7 @@
     },
     "docker-build": {
       "dependsOn": ["build"],
-      "command": "docker build -f apps/scheduler/Dockerfile . -t scheduler"
+      "command": "docker build -f Dockerfile . -t scheduler --build-arg IMAGE_NAME=scheduler"
     }
   },
   "tags": []

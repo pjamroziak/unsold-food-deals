@@ -16,10 +16,17 @@ RUN pnpm --prod install
 # DEPLOY
 FROM base AS deploy
 
+ENV NODE_ENV production
+ARG IMAGE_NAME
+
+RUN addgroup -S nonroot && adduser -S nonroot -G nonroot
+
 WORKDIR /app
 
 COPY --from=dependencies /app/node_modules ./node_modules
-COPY ./dist/apps/bots .
+COPY ./dist/apps/${IMAGE_NAME} .
 
 ENTRYPOINT ["/sbin/tini", "--"]
+USER nonroot
+
 CMD [ "node", "main.js"]
