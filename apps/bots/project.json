@@ -64,7 +64,7 @@
     },
     "docker-build": {
       "dependsOn": ["build"],
-      "command": "docker build -f apps/bots/Dockerfile . -t bots"
+      "command": "docker build -f Dockerfile . -t bots --build-arg IMAGE_NAME=bots"
     }
   },
   "tags": []

@@ -60,7 +60,7 @@
     },
     "docker-build": {
       "dependsOn": ["build"],
-      "command": "docker build -f apps/offers-worker/Dockerfile . -t offers-worker"
+      "command": "docker build -f Dockerfile . -t offers-worker --build-arg IMAGE_NAME=offers-worker"
     }
   },
   "tags": []
