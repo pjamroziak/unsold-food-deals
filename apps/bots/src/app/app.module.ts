@@ -112,9 +112,9 @@ const telegrafFactory = {
     BullModule.forRootAsync(bullmqFactory),
     ApiClientModule.forRootAsync(apiClientFactory),
     DiscordModule.forRootAsync(discordFactory),
-    // TelegrafModule.forRootAsync(telegrafFactory),
+    TelegrafModule.forRootAsync(telegrafFactory),
 
-    // TelegramBotModule,
+    TelegramBotModule,
     DiscordBotModule,
   ],
 })
