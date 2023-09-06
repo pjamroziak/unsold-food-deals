@@ -18,6 +18,11 @@ import { TypedConfigModule, dotenvLoader } from 'nest-typed-config';
 import { LoggerModule, LoggerModuleAsyncParams } from 'nestjs-pino';
 import { BullModule } from '@nestjs/bullmq';
 import * as Bull from 'bullmq';
+import {
+  isProduction,
+  getPinoLokiTransport,
+  getPinoPrettyTransport,
+} from '@unsold-food-deals/utils';
 
 const mikroOrmFactory: MikroOrmModuleAsyncOptions = {
   inject: [DatabaseConfig],
@@ -50,17 +55,9 @@ const loggerFactory: LoggerModuleAsyncParams = {
       pinoHttp: {
         name: 'grafanacloud-api',
         level: 'info',
-        transport: {
-          target: 'pino-loki',
-          options: {
-            silenceErrors: false,
-            host: config.host,
-            basicAuth: {
-              username: config.username,
-              password: config.password,
-            },
-          },
-        },
+        transport: isProduction()
+          ? getPinoLokiTransport(config)
+          : getPinoPrettyTransport(),
       },
     };
   },

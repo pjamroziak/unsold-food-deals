@@ -5,6 +5,11 @@ import { TypedConfigModule, dotenvLoader } from 'nest-typed-config';
 import { BullModule } from '@nestjs/bullmq';
 import { TasksModule } from './tasks/tasks.module';
 import { LoggerModule, LoggerModuleAsyncParams } from 'nestjs-pino';
+import {
+  isProduction,
+  getPinoLokiTransport,
+  getPinoPrettyTransport,
+} from '@unsold-food-deals/utils';
 
 const bullmqFactory = {
   inject: [RedisConfig],
@@ -25,17 +30,9 @@ const loggerFactory: LoggerModuleAsyncParams = {
       pinoHttp: {
         name: 'grafanacloud-scheduler',
         level: 'info',
-        transport: {
-          target: 'pino-loki',
-          options: {
-            silenceErrors: false,
-            host: config.host,
-            basicAuth: {
-              username: config.username,
-              password: config.password,
-            },
-          },
-        },
+        transport: isProduction()
+          ? getPinoLokiTransport(config)
+          : getPinoPrettyTransport(),
       },
     };
   },

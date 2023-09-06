@@ -30,6 +30,11 @@ import {
   ApiClientModule,
   ApiClientOptions,
 } from '@unsold-food-deals/api-client';
+import {
+  isProduction,
+  getPinoLokiTransport,
+  getPinoPrettyTransport,
+} from '@unsold-food-deals/utils';
 
 const bullmqFactory = {
   inject: [RedisConfig],
@@ -65,17 +70,9 @@ const loggerFactory: LoggerModuleAsyncParams = {
       pinoHttp: {
         name: 'grafanacloud-offers-worker',
         level: 'info',
-        transport: {
-          target: 'pino-loki',
-          options: {
-            silenceErrors: false,
-            host: config.host,
-            basicAuth: {
-              username: config.username,
-              password: config.password,
-            },
-          },
-        },
+        transport: isProduction()
+          ? getPinoLokiTransport(config)
+          : getPinoPrettyTransport(),
       },
     };
   },

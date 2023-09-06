@@ -4,7 +4,7 @@ import { Client, TextChannel } from 'discord.js';
 import { ApiClient } from '@unsold-food-deals/api-client';
 import { ClientType, Offer } from '@unsold-food-deals/schemas';
 import { ISendMessageStrategy } from './strategy.interface';
-import { parseOfferToMessage } from '@unsold-food-deals/offer-message-parser';
+import { parseOfferToMessage } from '@unsold-food-deals/utils';
 
 @Injectable()
 export class SendMessageDiscordCommunityChannelStrategy
