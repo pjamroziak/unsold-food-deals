@@ -1,16 +1,16 @@
 {
-  "name": "offer-message-parser",
+  "name": "utils",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/offer-message-parser/src",
+  "sourceRoot": "libs/utils/src",
   "projectType": "library",
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/libs/offer-message-parser",
-        "main": "libs/offer-message-parser/src/index.ts",
-        "tsConfig": "libs/offer-message-parser/tsconfig.lib.json",
+        "outputPath": "dist/libs/utils",
+        "main": "libs/utils/src/index.ts",
+        "tsConfig": "libs/utils/tsconfig.lib.json",
         "assets": []
       }
     },
@@ -18,14 +18,14 @@
       "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["libs/offer-message-parser/**/*.ts"]
+        "lintFilePatterns": ["libs/utils/**/*.ts"]
       }
     },
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "libs/offer-message-parser/jest.config.ts",
+        "jestConfig": "libs/utils/jest.config.ts",
         "passWithNoTests": true
       },
       "configurations": {
