@@ -20,22 +20,11 @@ import { TelegrafModule } from 'nestjs-telegraf';
 import path from 'path';
 import { session } from 'telegraf';
 import { I18n } from 'telegraf-fluent';
-
-const getTransport = (config: LoggerConfig) => {
-  return process.env.NODE_ENV !== 'production'
-    ? { target: 'pino-pretty' }
-    : {
-        target: 'pino-loki',
-        options: {
-          silenceErrors: false,
-          host: config.host,
-          basicAuth: {
-            username: config.username,
-            password: config.password,
-          },
-        },
-      };
-};
+import {
+  getPinoLokiTransport,
+  getPinoPrettyTransport,
+  isProduction,
+} from '@unsold-food-deals/utils';
 
 const apiClientFactory = {
   inject: [ApiConfig],
@@ -63,9 +52,11 @@ const loggerFactory: LoggerModuleAsyncParams = {
   useFactory: (config: LoggerConfig) => {
     return {
       pinoHttp: {
-        name: 'grafanacloud-telegram-bot',
+        name: 'grafanacloud-bots',
         level: 'info',
-        transport: getTransport(config),
+        transport: isProduction()
+          ? getPinoLokiTransport(config)
+          : getPinoPrettyTransport(),
       },
     };
   },

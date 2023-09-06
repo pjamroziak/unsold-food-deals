@@ -4,7 +4,7 @@ import { Telegraf } from 'telegraf';
 import { DefaultParseMode } from '../../../telegram/constants';
 import { ApiClient } from '@unsold-food-deals/api-client';
 import { ClientType, Offer } from '@unsold-food-deals/schemas';
-import { parseOfferToMessage } from '@unsold-food-deals/offer-message-parser';
+import { parseOfferToMessage } from '@unsold-food-deals/utils';
 
 type SendMessageTelegrafError = {
   response: {
