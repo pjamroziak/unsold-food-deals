@@ -15,7 +15,8 @@
         "main": "apps/scheduler/src/main.ts",
         "tsConfig": "apps/scheduler/tsconfig.app.json",
         "isolatedConfig": true,
-        "webpackConfig": "apps/scheduler/webpack.config.js"
+        "webpackConfig": "apps/scheduler/webpack.config.js",
+        "generatePackageJson": true
       },
       "configurations": {
         "development": {},

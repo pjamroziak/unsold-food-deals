@@ -15,7 +15,8 @@
         "main": "apps/offers-worker/src/main.ts",
         "tsConfig": "apps/offers-worker/tsconfig.app.json",
         "isolatedConfig": true,
-        "webpackConfig": "apps/offers-worker/webpack.config.js"
+        "webpackConfig": "apps/offers-worker/webpack.config.js",
+        "generatePackageJson": true
       },
       "configurations": {
         "development": {},

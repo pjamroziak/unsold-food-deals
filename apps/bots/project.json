@@ -16,7 +16,8 @@
         "tsConfig": "apps/bots/tsconfig.app.json",
         "assets": ["apps/bots/src/assets"],
         "isolatedConfig": true,
-        "webpackConfig": "apps/bots/webpack.config.js"
+        "webpackConfig": "apps/bots/webpack.config.js",
+        "generatePackageJson": true
       },
       "configurations": {
         "development": {},

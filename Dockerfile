@@ -6,10 +6,11 @@ RUN corepack enable pnpm
 
 # DEPENDENCIES
 FROM base AS dependencies
+ARG IMAGE_NAME
 
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml ./
+COPY ./dist/apps/${IMAGE_NAME}/package.json ./dist/apps/${IMAGE_NAME}/pnpm-lock.yaml ./
 
 RUN pnpm --prod install
 
