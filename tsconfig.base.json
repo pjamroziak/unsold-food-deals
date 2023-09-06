@@ -29,8 +29,8 @@
       "@unsold-food-deals/schemas": [
         "libs/schemas-dto/src/index.ts"
       ],
-      "@unsold-food-deals/offer-message-parser": [
-        "libs/offer-message-parser/src/index.ts"
+      "@unsold-food-deals/utils": [
+        "libs/utils/src/index.ts"
       ]
     }
   },
