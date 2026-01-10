@@ -1,2 +1,3 @@
 # UnsoldFoodDeals
-Project closed
+
+https://discord.gg/PkyyhqFpRZ
