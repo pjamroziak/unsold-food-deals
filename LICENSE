@@ -1,0 +1,61 @@
+Modified MIT License - Non-Commercial and No AI Training
+
+Copyright (c) 2026 Paweł Jamroziak
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to use,
+copy, modify, and distribute the Software solely for personal,
+non-commercial, educational, or research purposes, subject to the following
+conditions:
+
+1. The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+2. The Software may not be used, directly or indirectly, for any commercial
+purpose without prior explicit written permission from the copyright holder.
+
+Commercial use includes, but is not limited to, use of the Software as part
+of a paid product, service, subscription, platform, hosted service, or other
+commercial offering; use of the Software by or on behalf of a commercial
+organization for internal business operations; incorporation of the Software
+into proprietary or revenue-generating software; sale, licensing,
+sublicensing, renting, or monetization of the Software or any derivative work
+based on it; and providing paid consulting, hosting, support, integration, or
+other commercial services substantially based on the Software.
+
+3. The Software, including its source code, documentation, generated outputs
+that substantially reproduce the Software, or any substantial portion
+thereof, may not be used, directly or indirectly, for training, pre-training,
+fine-tuning, aligning, distilling, evaluating, benchmarking, or otherwise
+improving any artificial intelligence or machine learning model.
+
+4. The Software may not be used to develop, create, enhance, or support large
+language models, generative artificial intelligence systems, code generation
+models, or similar automated systems.
+
+5. The Software may not be incorporated into, used to create, or used to
+enrich any training corpus, dataset, embedding database, retrieval corpus, or
+similar collection intended for the development, training, fine-tuning,
+evaluation, benchmarking, or improvement of any artificial intelligence or
+machine learning system.
+
+6. Automated extraction, scraping, crawling, indexing, or collection of the
+Software for artificial intelligence or machine learning purposes is
+prohibited.
+
+7. The restrictions concerning artificial intelligence and machine learning
+apply regardless of whether the relevant system or organization is
+commercial, non-commercial, academic, research-oriented, open-source, or
+proprietary.
+
+8. Any commercial use or any use related to artificial intelligence or
+machine learning requires prior explicit written permission from the
+copyright holder.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHOR OR COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
